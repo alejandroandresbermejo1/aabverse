@@ -10,7 +10,7 @@ export interface RecordResponse {
   providedIn: 'root',
 })
 export class RecordService {
-  private readonly API_URL = 'http://localhost:8000/api/records';
+  private readonly API_URL = 'https://aabverseback.vercel.app/api/records';
 
   async fetchRecords(): Promise<Record<string, number> | null> {
     try {
