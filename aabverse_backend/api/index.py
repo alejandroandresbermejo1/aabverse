@@ -33,7 +33,7 @@ app.add_middleware(
 
 @app.get("/")
 def root():
-    return {"message": "back aabverse funcionando correctamente"}
+    return {"message": "Api de AABVerse funcionando correctamente"}
 
 app.include_router(games_router, prefix="/api/games")
 app.include_router(aimshot_records_router, prefix="/api", tags=["Games Records"])

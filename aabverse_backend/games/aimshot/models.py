@@ -2,8 +2,8 @@ from typing import Literal
 from pydantic import BaseModel
 
 class ScoreSubmission(BaseModel):
-    mode: Literal['classic', 'survival', 'hunt']
-    difficulty: Literal['easy', 'normal', 'hard']
+    mode: Literal['contrareloj', 'supervivencia', 'caza']
+    difficulty: Literal['facil', 'normal', 'dificil']
     score: int
 
 class RecordResponse(BaseModel):

@@ -14,7 +14,7 @@ export class GameoverComponent {
   standardHits = input<number>(0);
   goldenHits = input<number>(0);
   penaltyHits = input<number>(0);
-  difficulty = input<'easy' | 'normal' | 'hard'>('normal');
+  difficulty = input<'facil' | 'normal' | 'dificil'>('normal');
 
   restartGame = output<void>();
   goHome = output<void>();

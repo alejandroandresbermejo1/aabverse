@@ -24,12 +24,12 @@ interface ClickFeedback {
 export class OngameComponent implements OnDestroy {
   @ViewChild('gameArea') gameAreaRef!: ElementRef<HTMLDivElement>;
 
-  newScoreEvent = output<{ score: number; mode: 'classic' | 'survival' | 'hunt'; difficulty: DifficultyLevel }>();
+  newScoreEvent = output<{ score: number; mode: GameMode; difficulty: DifficultyLevel }>();
   crosshairStyleChange = output<CrosshairStyle>();
 
-  mode = signal<GameMode>('classic');
+  mode = signal<GameMode>('contrareloj');
   difficulty = signal<DifficultyLevel>('normal');
-  crosshairStyle = input<CrosshairStyle>('classic');
+  crosshairStyle = input<CrosshairStyle>('clasica');
 
   selectCrosshair(style: CrosshairStyle) {
     this.crosshairStyleChange.emit(style);
@@ -97,7 +97,7 @@ export class OngameComponent implements OnDestroy {
     this.targets.set([]);
     this.feedbacks.set([]);
 
-    const initialLivesMap = { easy: 5, normal: 4, hard: 3 };
+    const initialLivesMap = { facil: 5, normal: 4, dificil: 3 };
     const startingLives = initialLivesMap[this.difficulty()];
     this.maxLives.set(startingLives);
     this.lives.set(startingLives);
@@ -118,7 +118,7 @@ export class OngameComponent implements OnDestroy {
 
     const currentMode = this.mode();
 
-    if (currentMode === 'classic') {
+    if (currentMode === 'contrareloj') {
       this.gameTimer = setInterval(() => {
         this.timeLeft.update(t => {
           if (t <= 1) {
@@ -131,11 +131,11 @@ export class OngameComponent implements OnDestroy {
     }
 
     let spawnInterval = 800;
-    if (currentMode === 'hunt') {
-      const huntSpeedMap = { easy: 900, normal: 700, hard: 500 };
+    if (currentMode === 'caza') {
+      const huntSpeedMap = { facil: 900, normal: 700, dificil: 500 };
       spawnInterval = huntSpeedMap[this.difficulty()];
     } else {
-      const speedMap = { easy: 1000, normal: 800, hard: 550 };
+      const speedMap = { facil: 1000, normal: 800, dificil: 550 };
       spawnInterval = speedMap[this.difficulty()];
     }
 
@@ -151,7 +151,7 @@ export class OngameComponent implements OnDestroy {
       const now = Date.now();
       const currentList = this.targets();
 
-      if (currentMode === 'survival' || currentMode === 'hunt') {
+      if (currentMode === 'supervivencia' || currentMode === 'caza') {
         const missedTargets = currentList.filter(
           t => !t.isHit && (now - t.createdAt) >= t.durationMs && t.type !== 'penalty'
         );
@@ -174,7 +174,7 @@ export class OngameComponent implements OnDestroy {
 
   private spawnTarget() {
     const currentTargets = this.targets();
-    const maxTargetsMap = { easy: 4, normal: 5, hard: 7 };
+    const maxTargetsMap = { facil: 4, normal: 5, dificil: 7 };
     if (currentTargets.length >= maxTargetsMap[this.difficulty()]) return;
 
     const currentMode = this.mode();
@@ -182,7 +182,7 @@ export class OngameComponent implements OnDestroy {
     let type: TargetType = 'standard';
     let points = 100;
 
-    const durationMultMap = { easy: 1.3, normal: 1.0, hard: 0.7 };
+    const durationMultMap = { facil: 1.3, normal: 1.0, dificil: 0.7 };
     const mult = durationMultMap[this.difficulty()];
 
     let durationMs = Math.round(2500 * mult);
@@ -207,11 +207,11 @@ export class OngameComponent implements OnDestroy {
     let endX: number | undefined;
     let endY: number | undefined;
 
-    if (currentMode === 'hunt') {
+    if (currentMode === 'caza') {
       const isVertical = Math.random() > 0.65;
 
       if (isVertical) {
-        const huntVerticalDurationMap = { easy: 4200, normal: 3400, hard: 2500 };
+        const huntVerticalDurationMap = { facil: 4200, normal: 3400, dificil: 2500 };
         durationMs = huntVerticalDurationMap[this.difficulty()];
 
         const fromTop = Math.random() > 0.5;
@@ -220,7 +220,7 @@ export class OngameComponent implements OnDestroy {
         startX = Math.floor(Math.random() * 70) + 15;
         endX = startX + (Math.random() * 20 - 10);
       } else {
-        const huntHorizontalDurationMap = { easy: 3600, normal: 2800, hard: 2000 };
+        const huntHorizontalDurationMap = { facil: 3600, normal: 2800, dificil: 2000 };
         durationMs = huntHorizontalDurationMap[this.difficulty()];
 
         const fromLeft = Math.random() > 0.5;
@@ -295,7 +295,7 @@ export class OngameComponent implements OnDestroy {
       this.goldenHits.update(h => h + 1);
     } else if (target.type === 'penalty') {
       this.penaltyHits.update(h => h + 1);
-      if (this.mode() === 'survival' || this.mode() === 'hunt') {
+      if (this.mode() === 'supervivencia' || this.mode() === 'caza') {
         this.loseLives(1);
       }
     }
@@ -316,7 +316,7 @@ export class OngameComponent implements OnDestroy {
     }
 
     if (target.type === 'penalty') {
-      const isLifeLossMode = this.mode() === 'survival' || this.mode() === 'hunt';
+      const isLifeLossMode = this.mode() === 'supervivencia' || this.mode() === 'caza';
       if (isLifeLossMode) {
         this.showFeedback(feedbackX, feedbackY, '-1', 'penalty', true);
       } else {

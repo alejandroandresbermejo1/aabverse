@@ -119,32 +119,32 @@
             <button
               type="button"
               class="select-btn"
-              [class.active]="mode() === 'classic'"
-              (click)="onSelectMode('classic')"
+              [class.active]="mode() === 'contrareloj'"
+              (click)="onSelectMode('contrareloj')"
             >
               Contrareloj
             </button>
             <button
               type="button"
               class="select-btn"
-              [class.active]="mode() === 'survival'"
-              (click)="onSelectMode('survival')"
+              [class.active]="mode() === 'supervivencia'"
+              (click)="onSelectMode('supervivencia')"
             >
               Supervivencia
             </button>
             <button
               type="button"
               class="select-btn"
-              [class.active]="mode() === 'hunt'"
-              (click)="onSelectMode('hunt')"
+              [class.active]="mode() === 'caza'"
+              (click)="onSelectMode('caza')"
             >
               Caza
             </button>
           </div>
           <p class="config-help-text">
-            @if (mode() === 'classic') {
+            @if (mode() === 'contrareloj') {
               Consigue la mayor puntuación posible antes de que se agoten los 45 segundos.
-            } @else if (mode() === 'survival') {
+            } @else if (mode() === 'supervivencia') {
               Aguanta el máximo tiempo posible sin perder tus vidas a medida que aumenta la
               velocidad.
             } @else {
@@ -178,8 +178,8 @@
             <button
               type="button"
               class="select-btn"
-              [class.active]="difficulty() === 'easy'"
-              (click)="onSelectDifficulty('easy')"
+              [class.active]="difficulty() === 'facil'"
+              (click)="onSelectDifficulty('facil')"
             >
               Fácil
             </button>
@@ -194,14 +194,14 @@
             <button
               type="button"
               class="select-btn"
-              [class.active]="difficulty() === 'hard'"
-              (click)="onSelectDifficulty('hard')"
+              [class.active]="difficulty() === 'dificil'"
+              (click)="onSelectDifficulty('dificil')"
             >
               Difícil
             </button>
           </div>
           <p class="config-help-text">
-            @if (difficulty() === 'easy') {
+            @if (difficulty() === 'facil') {
               Ritmo tranquilo con dianas de mayor duración y pocas en pantalla, ideal para calentar.
             } @else if (difficulty() === 'normal') {
               Velocidad equilibrada y apariciones dinámicas para poner a prueba tu precisión.
@@ -217,24 +217,24 @@
             <button
               type="button"
               class="select-btn"
-              [class.active]="crosshairStyle() === 'default'"
-              (click)="onSelectCrosshair('default')"
+              [class.active]="crosshairStyle() === 'defecto'"
+              (click)="onSelectCrosshair('defecto')"
             >
               Por defecto
             </button>
             <button
               type="button"
               class="select-btn"
-              [class.active]="crosshairStyle() === 'dot'"
-              (click)="onSelectCrosshair('dot')"
+              [class.active]="crosshairStyle() === 'punto'"
+              (click)="onSelectCrosshair('punto')"
             >
               Punto
             </button>
             <button
               type="button"
               class="select-btn"
-              [class.active]="crosshairStyle() === 'classic'"
-              (click)="onSelectCrosshair('classic')"
+              [class.active]="crosshairStyle() === 'clasica'"
+              (click)="onSelectCrosshair('clasica')"
             >
               Clásica
             </button>

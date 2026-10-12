@@ -16,7 +16,7 @@ def get_records():
             cur.execute("""
                 SELECT mode, record 
                 FROM aimshot.records 
-                WHERE difficulty = 'hard';
+                WHERE difficulty = 'dificil';
             """)
             rows = cur.fetchall()
             records_map = {row["mode"]: row["record"] for row in rows}
@@ -28,11 +28,11 @@ def get_records():
 
 @router.post("/records", response_model=RecordResponse)
 def submit_score(payload: ScoreSubmission):
-    if payload.difficulty != "hard":
+    if payload.difficulty != "dificil":
         return RecordResponse(
             is_new_record=False,
             record=payload.score,
-            message="Los récords solo se registran en dificultad Difícil."
+            message="Solo se guarda en dificultad difícil."
         )
 
     try:
@@ -58,7 +58,7 @@ def submit_score(payload: ScoreSubmission):
                 return RecordResponse(
                     is_new_record=True,
                     record=payload.score,
-                    message="¡Primer récord registrado para este modo!"
+                    message="Nuevo récord."
                 )
             
             current_record = row["record"]
@@ -72,13 +72,13 @@ def submit_score(payload: ScoreSubmission):
                 return RecordResponse(
                     is_new_record=True,
                     record=payload.score,
-                    message="¡Nuevo récord global superado!"
+                    message="Récord superado."
                 )
             
             return RecordResponse(
                 is_new_record=False,
                 record=current_record,
-                message="El récord actual es mayor. No se modifica la base de datos."
+                message="Récord no superado."
             )
     except Exception as e:
         conn.rollback()

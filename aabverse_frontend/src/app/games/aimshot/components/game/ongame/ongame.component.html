@@ -44,7 +44,7 @@
         <span class="hud-value value-score">{{ score() }}</span>
       </div>
 
-      @if (mode() === 'classic') {
+      @if (mode() === 'contrareloj') {
         <div class="hud-box" [class.hud-box-danger]="timeLeft() <= 10">
           <svg class="timer-icon" [class.icon-danger]="timeLeft() <= 10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <circle cx="12" cy="12" r="10" stroke-width="2"/>
@@ -77,10 +77,10 @@
       <div 
         (mousedown)="onTargetHit(target, $event)"
         class="target-wrapper"
-        [class.target-flying]="mode() === 'hunt'"
+        [class.target-flying]="mode() === 'caza'"
         [class.target-shatter]="target.isHit"
-        [style.left.%]="mode() === 'hunt' ? null : target.x"
-        [style.top.%]="mode() === 'hunt' ? null : target.y"
+        [style.left.%]="mode() === 'caza' ? null : target.x"
+        [style.top.%]="mode() === 'caza' ? null : target.y"
         [style.--start-x.%]="target.startX"
         [style.--start-y.%]="target.startY"
         [style.--end-x.%]="target.endX"

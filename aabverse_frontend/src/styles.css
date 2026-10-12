@@ -16,14 +16,22 @@ body {
 .crosshair-mode-default,
 .crosshair-mode-default *,
 .crosshair-mode-default button,
-.crosshair-mode-default a {
+.crosshair-mode-default a,
+.crosshair-mode-defecto,
+.crosshair-mode-defecto *,
+.crosshair-mode-defecto button,
+.crosshair-mode-defecto a {
   cursor: auto;
 }
 
 .crosshair-mode-dot,
 .crosshair-mode-dot *,
 .crosshair-mode-dot button,
-.crosshair-mode-dot a {
+.crosshair-mode-dot a,
+.crosshair-mode-punto,
+.crosshair-mode-punto *,
+.crosshair-mode-punto button,
+.crosshair-mode-punto a {
   cursor:
     url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><circle cx='16' cy='16' r='6' fill='%23f43f5e' stroke='%23ffffff' stroke-width='1.5'/></svg>")
       16 16,
@@ -33,7 +41,11 @@ body {
 .crosshair-mode-classic,
 .crosshair-mode-classic *,
 .crosshair-mode-classic button,
-.crosshair-mode-classic a {
+.crosshair-mode-classic a,
+.crosshair-mode-clasica,
+.crosshair-mode-clasica *,
+.crosshair-mode-clasica button,
+.crosshair-mode-clasica a {
   cursor:
     url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><circle cx='16' cy='16' r='10' fill='none' stroke='%23f43f5e' stroke-width='2'/><path d='M16 2v6M16 24v6M2 16h6M24 16h6' stroke='%23f43f5e' stroke-width='2' stroke-linecap='round'/><circle cx='16' cy='16' r='2.5' fill='%23ffffff'/></svg>")
       16 16,

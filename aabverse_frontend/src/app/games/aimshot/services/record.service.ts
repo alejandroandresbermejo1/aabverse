@@ -18,14 +18,14 @@ export class RecordService {
       if (!response.ok) return null;
       return await response.json();
     } catch (e) {
-      console.warn('API de récords no disponible, usando almacenamiento local:', e);
+      console.warn('API no disponible. Usando local.', e);
       return null;
     }
   }
 
   async submitScore(
-    mode: 'classic' | 'survival' | 'hunt',
-    difficulty: 'easy' | 'normal' | 'hard',
+    mode: 'contrareloj' | 'supervivencia' | 'caza',
+    difficulty: 'facil' | 'normal' | 'dificil',
     score: number,
   ): Promise<RecordResponse | null> {
     try {
@@ -37,7 +37,7 @@ export class RecordService {
       if (!response.ok) return null;
       return await response.json();
     } catch (e) {
-      console.warn('No se pudo enviar el récord a la API, guardando en local:', e);
+      console.warn('Error al enviar récord. Guardado en local.', e);
       return null;
     }
   }

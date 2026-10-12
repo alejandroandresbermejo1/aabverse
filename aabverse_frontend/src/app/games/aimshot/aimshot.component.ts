@@ -5,8 +5,8 @@ import { OngameComponent } from './components/game/ongame/ongame.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { RecordService } from './services/record.service';
 
-export type DifficultyLevel = 'easy' | 'normal' | 'hard';
-export type CrosshairStyle = 'default' | 'dot' | 'classic';
+export type DifficultyLevel = 'facil' | 'normal' | 'dificil';
+export type CrosshairStyle = 'defecto' | 'punto' | 'clasica';
 
 @Component({
   selector: 'app-aimshot-game',
@@ -25,7 +25,7 @@ export class AimshotComponent implements OnInit {
   huntHighScore = signal<number>(0);
 
   difficulty = signal<DifficultyLevel>('normal');
-  crosshairStyle = signal<CrosshairStyle>('classic');
+  crosshairStyle = signal<CrosshairStyle>('clasica');
 
   constructor(private recordService: RecordService) {}
 
@@ -55,27 +55,30 @@ export class AimshotComponent implements OnInit {
   private async syncRemoteRecords() {
     const remoteRecords = await this.recordService.fetchRecords();
     if (remoteRecords) {
-      if (remoteRecords['classic'] !== undefined) {
-        this.classicHighScore.set(remoteRecords['classic']);
-        localStorage.setItem(this.CLASSIC_STORAGE_KEY, remoteRecords['classic'].toString());
+      const contrarelojVal = remoteRecords['contrareloj'] ?? remoteRecords['classic'];
+      if (contrarelojVal !== undefined) {
+        this.classicHighScore.set(contrarelojVal);
+        localStorage.setItem(this.CLASSIC_STORAGE_KEY, contrarelojVal.toString());
       }
-      if (remoteRecords['survival'] !== undefined) {
-        this.survivalHighScore.set(remoteRecords['survival']);
-        localStorage.setItem(this.SURVIVAL_STORAGE_KEY, remoteRecords['survival'].toString());
+      const supervivenciaVal = remoteRecords['supervivencia'] ?? remoteRecords['survival'];
+      if (supervivenciaVal !== undefined) {
+        this.survivalHighScore.set(supervivenciaVal);
+        localStorage.setItem(this.SURVIVAL_STORAGE_KEY, supervivenciaVal.toString());
       }
-      if (remoteRecords['hunt'] !== undefined) {
-        this.huntHighScore.set(remoteRecords['hunt']);
-        localStorage.setItem(this.HUNT_STORAGE_KEY, remoteRecords['hunt'].toString());
+      const cazaVal = remoteRecords['caza'] ?? remoteRecords['hunt'];
+      if (cazaVal !== undefined) {
+        this.huntHighScore.set(cazaVal);
+        localStorage.setItem(this.HUNT_STORAGE_KEY, cazaVal.toString());
       }
     }
   }
 
   async onScoreSubmitted(event: {
     score: number;
-    mode: 'classic' | 'survival' | 'hunt';
+    mode: 'contrareloj' | 'supervivencia' | 'caza';
     difficulty: DifficultyLevel;
   }) {
-    if (event.difficulty !== 'hard') {
+    if (event.difficulty !== 'dificil') {
       return;
     }
 
@@ -86,17 +89,17 @@ export class AimshotComponent implements OnInit {
       finalScore = response.record;
     }
 
-    if (event.mode === 'classic') {
+    if (event.mode === 'contrareloj') {
       if (finalScore > this.classicHighScore()) {
         this.classicHighScore.set(finalScore);
         localStorage.setItem(this.CLASSIC_STORAGE_KEY, finalScore.toString());
       }
-    } else if (event.mode === 'survival') {
+    } else if (event.mode === 'supervivencia') {
       if (finalScore > this.survivalHighScore()) {
         this.survivalHighScore.set(finalScore);
         localStorage.setItem(this.SURVIVAL_STORAGE_KEY, finalScore.toString());
       }
-    } else if (event.mode === 'hunt') {
+    } else if (event.mode === 'caza') {
       if (finalScore > this.huntHighScore()) {
         this.huntHighScore.set(finalScore);
         localStorage.setItem(this.HUNT_STORAGE_KEY, finalScore.toString());

@@ -1,8 +1,8 @@
 import { Component, input, output } from '@angular/core';
 
-export type DifficultyLevel = 'easy' | 'normal' | 'hard';
-export type CrosshairStyle = 'default' | 'dot' | 'classic';
-export type GameMode = 'classic' | 'survival' | 'hunt';
+export type DifficultyLevel = 'facil' | 'normal' | 'dificil';
+export type CrosshairStyle = 'defecto' | 'punto' | 'clasica';
+export type GameMode = 'contrareloj' | 'supervivencia' | 'caza';
 
 @Component({
   selector: 'app-setupgame',
@@ -11,9 +11,9 @@ export type GameMode = 'classic' | 'survival' | 'hunt';
   styleUrl: './setupgame.component.css'
 })
 export class SetupgameComponent {
-  mode = input<GameMode>('classic');
+  mode = input<GameMode>('contrareloj');
   difficulty = input<DifficultyLevel>('normal');
-  crosshairStyle = input<CrosshairStyle>('classic');
+  crosshairStyle = input<CrosshairStyle>('clasica');
 
   modeChange = output<GameMode>();
   difficultyChange = output<DifficultyLevel>();
