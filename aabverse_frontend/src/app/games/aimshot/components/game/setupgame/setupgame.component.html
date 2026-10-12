@@ -1,0 +1,255 @@
+<div class="overlay-card overlay-card-wide">
+  <div class="card-columns">
+    <div class="card-col-info">
+      <div class="info-header-block">
+        <div class="idle-icon-wrapper">
+          <svg class="idle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <circle cx="12" cy="12" r="9" stroke-width="1.8" />
+            <circle cx="12" cy="12" r="5" stroke-width="1.6" stroke-dasharray="2 1" />
+            <circle cx="12" cy="12" r="2" fill="currentColor" />
+            <line x1="12" y1="1" x2="12" y2="5" stroke-width="2" stroke-linecap="round" />
+            <line x1="12" y1="19" x2="12" y2="23" stroke-width="2" stroke-linecap="round" />
+            <line x1="1" y1="12" x2="5" y2="12" stroke-width="2" stroke-linecap="round" />
+            <line x1="19" y1="12" x2="23" y2="12" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </div>
+        <h2 class="card-title">¡PON A PRUEBA TU PUNTERÍA!</h2>
+        <span class="card-subtitle">Campo de Entrenamiento de Precisión</span>
+      </div>
+
+      <div class="controls-and-legend-group">
+        <div class="controls-section">
+          <label class="config-label controls-title">Controles</label>
+          <div class="controls-guide-banner">
+            <div class="control-item">
+              <div class="control-icon-box">
+                <svg
+                  class="control-svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="6" y="3" width="12" height="18" rx="6" />
+                  <line x1="12" y1="7" x2="12" y2="11" />
+                </svg>
+              </div>
+              <div class="control-info">
+                <span class="control-label">Apuntar</span>
+                <span class="control-action">Puntero del Ratón</span>
+              </div>
+            </div>
+            <div class="control-item">
+              <div class="control-icon-box">
+                <svg
+                  class="control-svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20z" />
+                  <path d="M12 6v12M6 12h12" />
+                </svg>
+              </div>
+              <div class="control-info">
+                <span class="control-label">Disparar</span>
+                <div class="control-keys">
+                  <span class="control-badge">Click Izquierdo</span>
+                  <span class="control-or">o</span>
+                  <span class="control-badge key-badge">Espacio</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="legend-section">
+          <label class="config-label legend-title">Puntuación</label>
+          <div class="legend-grid">
+            <div class="legend-item legend-item-standard">
+              <div class="mini-target">
+                <div class="ring-outer-rim">
+                  <div class="ring-middle-white">
+                    <div class="ring-inner-blue">
+                      <div class="ring-center-dot"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <span class="legend-name">Estándar</span>
+              <span class="legend-points points-positive">+100 pts</span>
+            </div>
+            <div class="legend-item legend-item-golden">
+              <div class="mini-target">
+                <div class="ring-outer-rim-gold">
+                  <div class="ring-middle-amber">
+                    <div class="ring-inner-yellow">
+                      <div class="ring-center-gold-dot"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <span class="legend-name">Dorada</span>
+              <span class="legend-points points-gold">+500 pts</span>
+            </div>
+            <div class="legend-item legend-item-penalty">
+              <div class="mini-target">
+                <div class="ring-outer-rim-red">
+                  <div class="ring-middle-black">
+                    <div class="ring-inner-red">
+                      <div class="ring-center-danger-dot"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <span class="legend-name">Penalización</span>
+              <span class="legend-points points-negative">-150 pts</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-col-config">
+      <div class="config-section">
+        <div class="config-group">
+          <label class="config-label">Modo de Juego</label>
+          <div class="selector-buttons">
+            <button
+              type="button"
+              class="select-btn"
+              [class.active]="mode() === 'classic'"
+              (click)="onSelectMode('classic')"
+            >
+              Contrareloj
+            </button>
+            <button
+              type="button"
+              class="select-btn"
+              [class.active]="mode() === 'survival'"
+              (click)="onSelectMode('survival')"
+            >
+              Supervivencia
+            </button>
+            <button
+              type="button"
+              class="select-btn"
+              [class.active]="mode() === 'hunt'"
+              (click)="onSelectMode('hunt')"
+            >
+              Caza
+            </button>
+          </div>
+          <p class="config-help-text">
+            @if (mode() === 'classic') {
+              Consigue la mayor puntuación posible antes de que se agoten los 45 segundos.
+            } @else if (mode() === 'survival') {
+              Aguanta el máximo tiempo posible sin perder tus vidas a medida que aumenta la
+              velocidad.
+            } @else {
+              Dianas en movimiento continuo cruzando la pantalla.
+            }
+          </p>
+          <div class="highscore-record-note">
+            <svg
+              class="note-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            <span>
+              Solo en dificultad <strong>Difícil</strong> se registrará la puntuación si supera el
+              récord actual del modo.
+            </span>
+          </div>
+        </div>
+
+        <div class="config-group">
+          <label class="config-label">Dificultad</label>
+          <div class="selector-buttons">
+            <button
+              type="button"
+              class="select-btn"
+              [class.active]="difficulty() === 'easy'"
+              (click)="onSelectDifficulty('easy')"
+            >
+              Fácil
+            </button>
+            <button
+              type="button"
+              class="select-btn"
+              [class.active]="difficulty() === 'normal'"
+              (click)="onSelectDifficulty('normal')"
+            >
+              Normal
+            </button>
+            <button
+              type="button"
+              class="select-btn"
+              [class.active]="difficulty() === 'hard'"
+              (click)="onSelectDifficulty('hard')"
+            >
+              Difícil
+            </button>
+          </div>
+          <p class="config-help-text">
+            @if (difficulty() === 'easy') {
+              Ritmo tranquilo con dianas de mayor duración y pocas en pantalla, ideal para calentar.
+            } @else if (difficulty() === 'normal') {
+              Velocidad equilibrada y apariciones dinámicas para poner a prueba tu precisión.
+            } @else {
+              Apariciones rápidas y constantes que exigirán tus mejores reflejos.
+            }
+          </p>
+        </div>
+
+        <div class="config-group">
+          <label class="config-label">Mirilla / Ratón</label>
+          <div class="selector-buttons">
+            <button
+              type="button"
+              class="select-btn"
+              [class.active]="crosshairStyle() === 'default'"
+              (click)="onSelectCrosshair('default')"
+            >
+              Por defecto
+            </button>
+            <button
+              type="button"
+              class="select-btn"
+              [class.active]="crosshairStyle() === 'dot'"
+              (click)="onSelectCrosshair('dot')"
+            >
+              Punto
+            </button>
+            <button
+              type="button"
+              class="select-btn"
+              [class.active]="crosshairStyle() === 'classic'"
+              (click)="onSelectCrosshair('classic')"
+            >
+              Clásica
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button
+    type="button"
+    (click)="onStart()"
+    (mousedown)="$event.stopPropagation()"
+    class="primary-btn"
+  >
+    ¡EMPEZAR PARTIDA!
+  </button>
+</div>

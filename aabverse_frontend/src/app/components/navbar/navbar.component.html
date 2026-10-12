@@ -1,0 +1,30 @@
+<nav class="navbar">
+  <div class="nav-brand-container">
+    @if (showBackButton) {
+      <a routerLink="/" class="back-hub-btn">
+        <svg class="back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        <span class="custom-tooltip">Volver al Menú Principal</span>
+      </a>
+    }
+    <div class="nav-brand">
+      <img src="hub/logo.png" alt="AABVerse Logo" class="brand-logo-img" />
+      <span class="brand-name"><span class="brand-title">AABVerse</span><span class="highlight-group">: <span class="highlight">Portal de Minijuegos</span></span></span>
+    </div>
+  </div>
+  <div class="nav-actions">
+    <div class="search-box">
+      <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input 
+        type="text" 
+        placeholder="Buscar minijuego..." 
+        [ngModel]="searchQuery" 
+        (ngModelChange)="onSearchChange($event)" />
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,147 @@
+<div 
+  #gameArea
+  (mousedown)="onAreaClick($event)"
+  class="game-playfield">
+
+  <div class="game-bg-radial"></div>
+
+  @for (fb of feedbacks(); track fb.id) {
+    <div 
+      class="hit-feedback"
+      [style.left.%]="fb.x"
+      [style.top.%]="fb.y"
+      [class.feedback-standard]="fb.targetType === 'standard'"
+      [class.feedback-golden]="fb.targetType === 'golden'"
+      [class.feedback-penalty]="fb.targetType === 'penalty'">
+      @if (fb.useHeartIcon) {
+        <span class="feedback-heart-wrapper">
+          {{ fb.text }}
+          <svg class="feedback-heart-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+        </span>
+      } @else {
+        <span>{{ fb.text }}</span>
+      }
+    </div>
+  }
+
+  @if (gameState() === 'idle') {
+    <app-setupgame 
+      [mode]="mode()"
+      [difficulty]="difficulty()"
+      [crosshairStyle]="crosshairStyle()"
+      (modeChange)="mode.set($event)"
+      (difficultyChange)="difficulty.set($event)"
+      (crosshairStyleChange)="selectCrosshair($event)"
+      (startGame)="startGame()" />
+  }
+
+  @if (gameState() === 'playing') {
+    <div class="game-hud">
+      <div class="hud-box">
+        <span class="hud-label">Puntos</span>
+        <span class="hud-value value-score">{{ score() }}</span>
+      </div>
+
+      @if (mode() === 'classic') {
+        <div class="hud-box" [class.hud-box-danger]="timeLeft() <= 10">
+          <svg class="timer-icon" [class.icon-danger]="timeLeft() <= 10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" stroke-width="2"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6l4 2"/>
+          </svg>
+          <span class="hud-value" [class.text-danger]="timeLeft() <= 10">
+            {{ timeLeft() }}s
+          </span>
+        </div>
+      } @else {
+        <div class="hud-box" [class.hud-box-danger]="lives() === 1">
+          <span class="hud-label">Vidas</span>
+          <div class="hud-lives">
+            @for (alive of livesArray(); track $index) {
+              <svg class="heart-icon" [class.heart-lost]="!alive" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+              </svg>
+            }
+          </div>
+        </div>
+      }
+
+      <div class="hud-box">
+        <span class="hud-label">Precisión</span>
+        <span class="hud-value value-accuracy">{{ accuracy() }}%</span>
+      </div>
+    </div>
+
+    @for (target of targets(); track target.id) {
+      <div 
+        (mousedown)="onTargetHit(target, $event)"
+        class="target-wrapper"
+        [class.target-flying]="mode() === 'hunt'"
+        [class.target-shatter]="target.isHit"
+        [style.left.%]="mode() === 'hunt' ? null : target.x"
+        [style.top.%]="mode() === 'hunt' ? null : target.y"
+        [style.--start-x.%]="target.startX"
+        [style.--start-y.%]="target.startY"
+        [style.--end-x.%]="target.endX"
+        [style.--end-y.%]="target.endY"
+        [style.--flight-duration.ms]="target.durationMs"
+        [style.width.px]="target.sizePx"
+        [style.height.px]="target.sizePx">
+        
+        <div class="target-body-container" [class.is-shattering]="target.isHit">
+          @for (piece of [1,2,3,4]; track piece) {
+            <div class="shatter-piece" [class]="'piece-' + piece">
+              @if (target.type === 'standard') {
+                <div class="target-body target-standard">
+                  <div class="ring-outer-rim">
+                    <div class="ring-middle-white">
+                      <div class="ring-inner-blue">
+                        <div class="ring-center-dot"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              } @else if (target.type === 'golden') {
+                <div class="target-body target-golden">
+                  <div class="ring-outer-rim-gold">
+                    <div class="ring-middle-amber">
+                      <div class="ring-inner-yellow">
+                        <div class="ring-center-gold-dot"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              } @else {
+                <div class="target-body target-penalty">
+                  <div class="ring-outer-rim-red">
+                    <div class="ring-middle-black">
+                      <div class="ring-inner-red">
+                        <div class="ring-center-danger-dot"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    }
+  }
+
+  @if (gameState() === 'ended') {
+    <app-gameover 
+      [score]="score()"
+      [accuracy]="accuracy()"
+      [totalHits]="totalHits()"
+      [totalShots]="totalShots()"
+      [standardHits]="standardHits()"
+      [goldenHits]="goldenHits()"
+      [penaltyHits]="penaltyHits()"
+      [difficulty]="difficulty()"
+      (goHome)="resetToIdle()"
+      (restartGame)="startGame()" />
+  }
+
+</div>

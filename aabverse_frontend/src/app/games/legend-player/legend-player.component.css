@@ -1,0 +1,45 @@
+.game-wrapper {
+  min-height: 100vh;
+  width: 100%;
+  background: #0b0f19;
+  color: #f8fafc;
+  font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+  position: relative;
+  overflow-x: hidden;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.bg-grid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(to right, rgba(0, 242, 254, 0.038) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 242, 254, 0.038) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+app-legend-navbar,
+app-legend-footer {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+app-setupgame,
+app-ongame,
+app-gameover,
+app-report {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}

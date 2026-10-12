@@ -1,0 +1,47 @@
+<nav class="navbar">
+  <div class="nav-brand-container">
+    <a routerLink="/" class="back-hub-btn">
+      <svg class="back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      <span class="custom-tooltip">Volver al Menú Principal</span>
+    </a>
+
+    <div class="nav-brand" (click)="goHome.emit()">
+      <img src="aimshot/logo.png" alt="AimShot Logo" class="brand-logo-img" />
+      <span class="brand-name"><span class="brand-title">AimShot</span><span class="highlight-group">: <span class="highlight">Campo de Tiro</span></span></span>
+    </div>
+  </div>
+
+  <div class="nav-actions">
+    <span class="records-title">Récords:</span>
+
+    <div class="highscore-badge">
+      <svg class="badge-icon clock-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="9"/>
+        <polyline points="12 7 12 12 15 15"/>
+      </svg>
+      <span class="badge-label">Contrareloj:</span>
+      <span class="badge-value">{{ classicHighScore() > 0 ? (classicHighScore() + ' pts') : '- pts' }}</span>
+    </div>
+
+    <div class="highscore-badge">
+      <svg class="badge-icon heart-svg" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+      </svg>
+      <span class="badge-label">Supervivencia:</span>
+      <span class="badge-value">{{ survivalHighScore() > 0 ? (survivalHighScore() + ' pts') : '- pts' }}</span>
+    </div>
+
+    <div class="highscore-badge">
+      <svg class="badge-icon hunt-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="9"/>
+        <path d="M12 3v3m0 12v3M3 12h3m12 0h3"/>
+        <circle cx="12" cy="12" r="3" fill="currentColor"/>
+      </svg>
+      <span class="badge-label">Caza:</span>
+      <span class="badge-value">{{ huntHighScore() > 0 ? (huntHighScore() + ' pts') : '- pts' }}</span>
+    </div>
+  </div>
+</nav>

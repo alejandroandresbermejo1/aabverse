@@ -1,0 +1,41 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #0b0f19;
+  color: #f8fafc;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  overflow-x: hidden;
+}
+
+.crosshair-mode-default,
+.crosshair-mode-default *,
+.crosshair-mode-default button,
+.crosshair-mode-default a {
+  cursor: auto;
+}
+
+.crosshair-mode-dot,
+.crosshair-mode-dot *,
+.crosshair-mode-dot button,
+.crosshair-mode-dot a {
+  cursor:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><circle cx='16' cy='16' r='6' fill='%23f43f5e' stroke='%23ffffff' stroke-width='1.5'/></svg>")
+      16 16,
+    crosshair;
+}
+
+.crosshair-mode-classic,
+.crosshair-mode-classic *,
+.crosshair-mode-classic button,
+.crosshair-mode-classic a {
+  cursor:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><circle cx='16' cy='16' r='10' fill='none' stroke='%23f43f5e' stroke-width='2'/><path d='M16 2v6M16 24v6M2 16h6M24 16h6' stroke='%23f43f5e' stroke-width='2' stroke-linecap='round'/><circle cx='16' cy='16' r='2.5' fill='%23ffffff'/></svg>")
+      16 16,
+    crosshair;
+}

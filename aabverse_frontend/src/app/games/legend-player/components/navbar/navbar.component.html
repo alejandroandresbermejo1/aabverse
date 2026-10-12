@@ -1,0 +1,28 @@
+<nav class="navbar">
+  <div class="nav-brand-container">
+    <a routerLink="/" class="back-hub-btn">
+      <svg class="back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      <span class="custom-tooltip">Volver al Menú Principal</span>
+    </a>
+    <div class="nav-brand">
+      <img src="legend-player/logo.png" alt="Logo" class="brand-logo-img" />
+      <span class="brand-name"><span class="brand-title">Legend Player</span><span class="highlight-group">: <span class="highlight">Modo Carrera</span></span></span>
+    </div>
+  </div>
+  <div class="nav-actions">
+    @if (screen() === 'career-main') {
+      <button type="button" class="reset-btn" (click)="resetGame()">
+        <span class="key-badge">ESC</span>
+        <span class="btn-text">Reiniciar Carrera</span>
+      </button>
+    } @else if (screen() === 'game-over') {
+      <button type="button" class="reset-btn game-over-nav-btn" (click)="resetGame()">
+        <span class="key-badge">ESC</span>
+        <span class="btn-text">Nueva Carrera</span>
+      </button>
+    }
+  </div>
+</nav>

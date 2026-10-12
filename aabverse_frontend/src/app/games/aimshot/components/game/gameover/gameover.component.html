@@ -1,0 +1,199 @@
+<div class="overlay-card overlay-card-wide">
+  <div class="gameover-header-block">
+    <h2 class="card-title">¡PARTIDA FINALIZADA!</h2>
+  </div>
+
+  <div class="gameover-columns">
+    <div class="gameover-col-main">
+      <label class="section-title">Resumen de Resultados</label>
+
+      <div class="stats-container">
+        <div class="stat-row">
+          <span class="stat-label">
+            <svg
+              class="stat-icon icon-score"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+              />
+            </svg>
+            Puntuación
+          </span>
+          <span class="stat-value value-score">{{ score() }} pts</span>
+        </div>
+
+        <div class="stat-row">
+          <span class="stat-label">
+            <svg
+              class="stat-icon icon-accuracy"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <line x1="22" y1="12" x2="18" y2="12" />
+              <line x1="6" y1="12" x2="2" y2="12" />
+              <line x1="12" y1="6" x2="12" y2="2" />
+              <line x1="12" y1="22" x2="12" y2="18" />
+            </svg>
+            Precisión
+          </span>
+          <span class="stat-value value-accuracy">{{ accuracy() }}%</span>
+        </div>
+
+        <div class="stat-row">
+          <span class="stat-label">
+            <svg
+              class="stat-icon icon-hits"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="M9 12l2 2 4-4" />
+            </svg>
+            Aciertos / Fallos
+          </span>
+          <span class="stat-value">
+            <span class="text-green">{{ totalHits() }}</span>
+            <span class="text-slash"> / </span>
+            <span class="text-red">{{ totalShots() > totalHits() ? totalShots() - totalHits() : 0 }}</span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="gameover-col-targets">
+      <label class="section-title">Desglose de Dianas</label>
+
+      <div class="targets-breakdown-list">
+        <div class="target-breakdown-card card-standard">
+          <div class="mini-target">
+            <div class="ring-outer-rim">
+              <div class="ring-middle-white">
+                <div class="ring-inner-blue">
+                  <div class="ring-center-dot"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="target-info">
+            <span class="target-name">Estándar</span>
+            <span class="target-pts-val">+100 pts / c.u.</span>
+          </div>
+          <div class="target-badge-wrapper">
+            <div class="target-count-badge badge-standard">
+              x{{ standardHits() }}
+            </div>
+            <span class="target-total-pts points-positive">
+              +{{ standardHits() * 100 }} pts
+            </span>
+          </div>
+        </div>
+
+        <div class="target-breakdown-card card-golden">
+          <div class="mini-target">
+            <div class="ring-outer-rim-gold">
+              <div class="ring-middle-amber">
+                <div class="ring-inner-yellow">
+                  <div class="ring-center-gold-dot"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="target-info">
+            <span class="target-name">Dorada</span>
+            <span class="target-pts-val">+500 pts / c.u.</span>
+          </div>
+          <div class="target-badge-wrapper">
+            <div class="target-count-badge badge-golden">
+              x{{ goldenHits() }}
+            </div>
+            <span class="target-total-pts points-gold">
+              +{{ goldenHits() * 500 }} pts
+            </span>
+          </div>
+        </div>
+
+        <div class="target-breakdown-card card-penalty">
+          <div class="mini-target">
+            <div class="ring-outer-rim-red">
+              <div class="ring-middle-black">
+                <div class="ring-inner-red">
+                  <div class="ring-center-danger-dot"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="target-info">
+            <span class="target-name">Penalización</span>
+            <span class="target-pts-val">-150 pts / c.u.</span>
+          </div>
+          <div class="target-badge-wrapper">
+            <div class="target-count-badge badge-penalty">
+              x{{ penaltyHits() }}
+            </div>
+            <span class="target-total-pts points-negative">
+              {{ penaltyHits() > 0 ? '-' + (penaltyHits() * 150) : '0' }} pts
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="gameover-footer-block">
+    @if (difficulty() !== 'hard') {
+      <div class="record-warning-note">
+        <svg
+          class="note-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="8" x2="12" y2="12" />
+          <line x1="12" y1="16" x2="12.01" y2="16" />
+        </svg>
+        <span>
+          Para registrar un nuevo récord de este modo debes jugar en dificultad
+          <strong>Difícil</strong>.
+        </span>
+      </div>
+    }
+
+    <div class="actions-group">
+      <button
+        type="button"
+        (click)="onRestart()"
+        (mousedown)="$event.stopPropagation()"
+        class="primary-btn"
+      >
+        VOLVER A JUGAR
+      </button>
+      <button
+        type="button"
+        (click)="goHome.emit()"
+        (mousedown)="$event.stopPropagation()"
+        class="secondary-btn"
+      >
+        VOLVER A INICIO
+      </button>
+    </div>
+  </div>
+</div>

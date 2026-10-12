@@ -1,0 +1,288 @@
+<div class="screen-container">
+  <div class="card glass-panel">
+    <form (ngSubmit)="onSubmit()" #creationForm="ngForm" class="setup-grid">
+      <div class="column-box left-speed-col">
+        <div class="mode-info-card">
+          <h4 class="mode-info-title">Modo Carrera</h4>
+          <p class="mode-info-desc">
+            Comienzas a los 16 años y competirás 24 temporadas hasta retirarte a los 40. Tu rendimiento determinará trofeos, progresión y ofertas en el mercado.
+          </p>
+        </div>
+
+        <h3 class="col-title ritmo-title">Ritmo de Simulación</h3>
+
+        <div class="speed-cards-container">
+          <div
+            class="speed-card"
+            [class.active]="selectedSpeed === 'slow'"
+            (click)="selectSpeed('slow')"
+          >
+            <span class="key-badge">1</span>
+            <div class="speed-header">
+              <span class="speed-title">Lento</span>
+            </div>
+            <p class="speed-desc">Avanza de 1 en 1 año por temporada</p>
+          </div>
+
+          <div
+            class="speed-card"
+            [class.active]="selectedSpeed === 'normal'"
+            (click)="selectSpeed('normal')"
+          >
+            <span class="key-badge">2</span>
+            <div class="speed-header">
+              <span class="speed-title">Normal</span>
+            </div>
+            <p class="speed-desc">Avanza de 2 en 2 años por temporada</p>
+          </div>
+
+          <div
+            class="speed-card"
+            [class.active]="selectedSpeed === 'fast'"
+            (click)="selectSpeed('fast')"
+          >
+            <span class="key-badge">3</span>
+            <div class="speed-header">
+              <span class="speed-title">Rápido</span>
+            </div>
+            <p class="speed-desc">Avanza de 3 en 3 años por temporada</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="column-box identity-col-box">
+        <h3 class="col-title">Identidad</h3>
+
+        <div class="identity-horizontal-wrap">
+          <div class="shirt-container">
+            <img src="legend-player/jersey.png" alt="Camiseta" class="shirt-img" />
+            <div class="shirt-text-overlay">
+              <span class="shirt-name">{{ nickname || 'APODO' }}</span>
+              <span class="shirt-num">{{ number || 10 }}</span>
+            </div>
+          </div>
+
+          <div class="identity-form-fields">
+            <div class="form-row-2col">
+              <div class="input-group">
+                <label>APODO</label>
+                <input
+                  type="text"
+                  name="nickname"
+                  [(ngModel)]="nickname"
+                  required
+                  maxlength="14"
+                  class="dark-input"
+                  placeholder="APODO"
+                />
+              </div>
+              <div class="input-group">
+                <label>NÚMERO</label>
+                <input
+                  type="number"
+                  name="number"
+                  [(ngModel)]="number"
+                  (input)="onNumberInput($event)"
+                  min="1"
+                  max="99"
+                  required
+                  class="dark-input"
+                />
+              </div>
+            </div>
+
+            <div class="input-group foot-group">
+              <label class="center-label">PIERNA HÁBIL</label>
+              <div class="foot-toggle">
+                <button
+                  type="button"
+                  class="foot-btn"
+                  [class.active]="preferredFoot === 'Izquierda'"
+                  (click)="preferredFoot = 'Izquierda'"
+                >
+                  Izquierda
+                </button>
+                <button
+                  type="button"
+                  class="foot-btn"
+                  [class.active]="preferredFoot === 'Derecha'"
+                  (click)="preferredFoot = 'Derecha'"
+                >
+                  Derecha
+                </button>
+              </div>
+            </div>
+
+            <div class="input-group nat-dropdown-group">
+              <label>NACIONALIDAD</label>
+              <div class="custom-dropdown-container">
+                <button
+                  type="button"
+                  class="custom-dropdown-trigger"
+                  [class.open]="isNationalityOpen"
+                  (click)="toggleNationalityDropdown()"
+                >
+                  <div class="selected-nation-info">
+                    <img [src]="nationalityFlag" [alt]="nationality" (error)="onBadgeError($event, nationality)" class="dropdown-flag-img" />
+                    <span class="selected-nation-name">{{ nationality }}</span>
+                  </div>
+                  <span class="dropdown-chevron">▼</span>
+                </button>
+
+                @if (isNationalityOpen) {
+                  <div class="custom-dropdown-menu">
+                    @for (nat of nationalities; track nat.code) {
+                      <div
+                        class="custom-dropdown-option"
+                        [class.selected]="nat.name === nationality"
+                        (click)="selectNationality(nat)"
+                      >
+                        <img [src]="nat.flag" [alt]="nat.name" (error)="onBadgeError($event, nat.name)" class="option-flag-img" />
+                        <span class="option-country-name">{{ nat.name }}</span>
+                        @if (nat.name === nationality) {
+                          <span class="option-check">✓</span>
+                        }
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="column-box">
+        <h3 class="col-title">Posición</h3>
+
+        <div class="pitch-container">
+          <div class="pitch-line pitch-box-top"></div>
+          <div class="pitch-line pitch-center-circle"></div>
+          <div class="pitch-line pitch-center-line"></div>
+          <div class="pitch-line pitch-box-bottom"></div>
+
+          <div class="pitch-row row-att">
+            <button
+              type="button"
+              class="pos-node"
+              [class.active]="position === 'EI'"
+              (click)="position = 'EI'"
+            >
+              EI
+            </button>
+            <button
+              type="button"
+              class="pos-node"
+              [class.active]="position === 'DC'"
+              (click)="position = 'DC'"
+            >
+              DC
+            </button>
+            <button
+              type="button"
+              class="pos-node"
+              [class.active]="position === 'ED'"
+              (click)="position = 'ED'"
+            >
+              ED
+            </button>
+          </div>
+
+          <div class="pitch-row row-mco">
+            <button
+              type="button"
+              class="pos-node"
+              [class.active]="position === 'MCO'"
+              (click)="position = 'MCO'"
+            >
+              MCO
+            </button>
+          </div>
+
+          <div class="pitch-row row-mid">
+            <button
+              type="button"
+              class="pos-node"
+              [class.active]="position === 'MI'"
+              (click)="position = 'MI'"
+            >
+              MI
+            </button>
+            <button
+              type="button"
+              class="pos-node"
+              [class.active]="position === 'MC'"
+              (click)="position = 'MC'"
+            >
+              MC
+            </button>
+            <button
+              type="button"
+              class="pos-node"
+              [class.active]="position === 'MD'"
+              (click)="position = 'MD'"
+            >
+              MD
+            </button>
+          </div>
+
+          <div class="pitch-row row-mcd">
+            <button
+              type="button"
+              class="pos-node"
+              [class.active]="position === 'MCD'"
+              (click)="position = 'MCD'"
+            >
+              MCD
+            </button>
+          </div>
+
+          <div class="pitch-row row-def">
+            <button
+              type="button"
+              class="pos-node"
+              [class.active]="position === 'LI'"
+              (click)="position = 'LI'"
+            >
+              LI
+            </button>
+            <button
+              type="button"
+              class="pos-node"
+              [class.active]="position === 'DFC'"
+              (click)="position = 'DFC'"
+            >
+              DFC
+            </button>
+            <button
+              type="button"
+              class="pos-node"
+              [class.active]="position === 'LD'"
+              (click)="position = 'LD'"
+            >
+              LD
+            </button>
+          </div>
+
+          <div class="pitch-row row-por">
+            <button
+              type="button"
+              class="pos-node"
+              [class.active]="position === 'POR'"
+              (click)="position = 'POR'"
+            >
+              POR
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="bottom-actions">
+        <button type="submit" [disabled]="!creationForm.form.valid" class="btn-confirm">
+          <span class="key-badge">INTRO</span>
+          Confirmar identidad
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,315 @@
+@if (player()) {
+  <div class="screen-container">
+    <div class="card glass-panel">
+      <div class="game-over-layout">
+        <aside class="left-col">
+          <div class="hero-player-card">
+            <div class="ovr-wrapper">
+              <div
+                class="ovr-gold-badge"
+                [ngClass]="getOvrClass(peakOvr)"
+                title="Pico máximo de OVR"
+              >
+                {{ peakOvr }}
+              </div>
+              <span class="ovr-lbl">MÁX OVR</span>
+            </div>
+
+            <div class="hero-info">
+              <div class="hero-top-row">
+                <img
+                  [src]="player()!.nationalityFlag"
+                  [alt]="player()!.nationality"
+                  class="flag-img-sm"
+                />
+                <span class="meta-tag">#{{ player()!.number }} {{ player()!.position }}</span>
+              </div>
+              <h2 class="player-title">{{ player()!.nickname }}</h2>
+            </div>
+
+            <div class="hero-value-box">
+              <span class="val-title">MÁX VALOR</span>
+              <span class="val-amount">{{ formatMarketValue(peakMarketValue) }}</span>
+            </div>
+          </div>
+
+          <div class="mini-stats-row">
+            <div class="mini-box">
+              <span class="lbl">PARTIDOS JUGADOS</span>
+              <span class="val">{{ player()!.careerStats.matchesPlayed }}</span>
+            </div>
+            <div class="mini-box">
+              <span class="lbl">{{ statConfig.stat1FullName }}</span>
+              <span class="val">{{
+                getStatValue(player()!.careerStats, statConfig.stat1Key)
+              }}</span>
+            </div>
+            <div class="mini-box">
+              <span class="lbl">{{ statConfig.stat2FullName }}</span>
+              <span class="val">{{
+                getStatValue(player()!.careerStats, statConfig.stat2Key)
+              }}</span>
+            </div>
+          </div>
+
+          <div class="nat-team-summary-card">
+            <div class="nat-title-row">
+              @if (
+                player()!.nationalTeamStats.flag &&
+                player()!.nationalTeamStats.flag.startsWith('http')
+              ) {
+                <img
+                  [src]="player()!.nationalTeamStats.flag"
+                  [alt]="player()!.nationalTeamStats.teamName"
+                  (error)="
+                    onBadgeError(
+                      $event,
+                      player()!.nationalTeamStats.teamName,
+                      player()!.nationalityFlag
+                    )
+                  "
+                  class="flag-img-md"
+                />
+              } @else if (
+                player()!.nationalityFlag && player()!.nationalityFlag.startsWith('http')
+              ) {
+                <img
+                  [src]="player()!.nationalityFlag"
+                  [alt]="player()!.nationalTeamStats.teamName"
+                  class="flag-img-md"
+                />
+              } @else {
+                <span class="nat-flag-emoji">{{
+                  player()!.nationalTeamStats.flag || player()!.nationalityFlag
+                }}</span>
+              }
+              <div class="nat-meta">
+                <h4 class="nat-name">{{ player()!.nationalTeamStats.teamName }}</h4>
+              </div>
+            </div>
+            <div class="nat-stats-mini">
+              <span
+                >PJ <strong>{{ player()!.nationalTeamStats.matchesPlayed }}</strong></span
+              >
+              <span
+                >{{ statConfig.stat1Label }}
+                <strong>{{
+                  getStatValue(player()!.nationalTeamStats, statConfig.stat1Key)
+                }}</strong></span
+              >
+              <span
+                >{{ statConfig.stat2Label }}
+                <strong>{{
+                  getStatValue(player()!.nationalTeamStats, statConfig.stat2Key)
+                }}</strong></span
+              >
+            </div>
+          </div>
+
+          <div class="trophy-shelf-triple">
+            <div class="trophy-sub-card">
+              <div class="sub-card-header">
+                <svg
+                  class="sub-card-svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polygon
+                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                  ></polygon>
+                </svg>
+                <span class="sub-card-title">Premios Individuales</span>
+              </div>
+              <div class="shelf-items" #individualShelf>
+                @if (individualAwards().length > 0) {
+                  @for (award of individualAwards(); track $index) {
+                    <div
+                      class="award-item-wrapper"
+                      (mouseenter)="onAwardMouseEnter($event, award)"
+                      (mouseleave)="onAwardMouseLeave()"
+                    >
+                      <span class="award-badge-icon">{{ award.icon || '🏆' }}</span>
+                    </div>
+                  }
+                } @else {
+                  <span class="empty-shelf-text">Sin premios</span>
+                }
+              </div>
+            </div>
+
+            <div class="trophy-sub-card">
+              <div class="sub-card-header">
+                <svg
+                  class="sub-card-svg trophy-gold-svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                  <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                  <path d="M4 22h16"></path>
+                  <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+                  <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+                  <path d="M18 2H6v7a6 6 0 0 0 12 0V2z"></path>
+                </svg>
+                <span class="sub-card-title">Títulos Club</span>
+              </div>
+              <div class="shelf-items" #teamShelf>
+                @if (teamTrophies().length > 0) {
+                  @for (trophy of teamTrophies(); track $index) {
+                    <div
+                      class="award-item-wrapper"
+                      (mouseenter)="onAwardMouseEnter($event, trophy)"
+                      (mouseleave)="onAwardMouseLeave()"
+                    >
+                      <span class="award-badge-icon">{{ trophy.icon || '🏆' }}</span>
+                    </div>
+                  }
+                } @else {
+                  <span class="empty-shelf-text">Sin títulos</span>
+                }
+              </div>
+            </div>
+
+            <div class="trophy-sub-card">
+              <div class="sub-card-header">
+                <svg
+                  class="sub-card-svg trophy-cyan-svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="2" y1="12" x2="22" y2="12"></line>
+                  <path
+                    d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
+                  ></path>
+                </svg>
+                <span class="sub-card-title">Títulos Selección</span>
+              </div>
+              <div class="shelf-items" #nationalShelf>
+                @if (nationalTrophies().length > 0) {
+                  @for (trophy of nationalTrophies(); track $index) {
+                    <div
+                      class="award-item-wrapper"
+                      (mouseenter)="onAwardMouseEnter($event, trophy)"
+                      (mouseleave)="onAwardMouseLeave()"
+                    >
+                      <span class="award-badge-icon">{{ trophy.icon || '🏆' }}</span>
+                    </div>
+                  }
+                } @else {
+                  <span class="empty-shelf-text">Sin títulos</span>
+                }
+              </div>
+            </div>
+          </div>
+
+          <button type="button" class="btn-restart" (click)="onNewCareer()">
+            <span class="key-badge">ESC</span>
+            Nueva Carrera
+          </button>
+        </aside>
+
+        <main class="right-col">
+          <div class="history-table-header">
+            <div class="header-cell age-header">EDAD</div>
+            <div class="header-cell club-header">CLUB</div>
+            <div class="header-cell div-header">DIV</div>
+            <div class="header-cell ovr-header">OVR</div>
+            <div class="header-cell stat-header">PJ</div>
+            <div class="header-cell stat-header">{{ statConfig.stat1Label }}</div>
+            <div class="header-cell stat-header">{{ statConfig.stat2Label }}</div>
+          </div>
+
+          <div class="timeline-list">
+            @for (
+              record of history();
+              track record.team.name + record.age + (record.isNationalTeam ? '_nat' : '_club')
+            ) {
+              <div class="timeline-row" [class.is-national-row]="record.isNationalTeam">
+                <div class="age-pill-node" [class.nat-age-pill]="record.isNationalTeam">
+                  {{ record.age }}
+                </div>
+                <div class="club-info-node">
+                  @if (record.team.badge && record.team.badge.startsWith('http')) {
+                    <img
+                      [src]="record.team.badge"
+                      [alt]="record.team.name"
+                      (error)="onBadgeError($event, record.team.name, record.team.countryFlag)"
+                      class="flag-img-sm"
+                    />
+                  } @else if (record.team.badge) {
+                    <span class="club-icon">{{ record.team.badge }}</span>
+                  } @else if (
+                    record.team.countryFlag && record.team.countryFlag.startsWith('http')
+                  ) {
+                    <img
+                      [src]="record.team.countryFlag"
+                      [alt]="record.team.name"
+                      class="flag-img-sm"
+                    />
+                  } @else {
+                    <span class="club-icon">{{ record.team.countryFlag }}</span>
+                  }
+                  <span class="club-text-name" [class.nat-text-name]="record.isNationalTeam">{{
+                    record.team.name
+                  }}</span>
+                </div>
+                <div class="div-cell">
+                  <span class="history-division-tag" [class.nat-div-tag]="record.isNationalTeam">
+                    {{ record.isNationalTeam ? 'INT' : record.team.division }}
+                  </span>
+                </div>
+                <div class="ovr-pill-node" [ngClass]="getOvrClass(record.ovr)">
+                  {{ record.ovr }}
+                </div>
+                <div class="stat-cell">{{ record.matchesPlayed }}</div>
+                <div class="stat-cell">{{ getStatValue(record, statConfig.stat1Key) }}</div>
+                <div class="stat-cell">{{ getStatValue(record, statConfig.stat2Key) }}</div>
+              </div>
+            }
+          </div>
+        </main>
+      </div>
+    </div>
+
+    @if (hoveredAward(); as tooltip) {
+      <div 
+        class="global-floating-tooltip"
+        [style.top.px]="tooltip.y"
+        [style.left.px]="tooltip.x"
+        [style.--arrow-offset.px]="tooltip.targetX - tooltip.x">
+        <div class="tooltip-award-title">{{ tooltip.name }}</div>
+        @if (tooltip.teamName) {
+          <div class="tooltip-team-row">
+            @if (tooltip.teamBadge) {
+              @if (tooltip.teamBadge.startsWith('http')) {
+                <img
+                  [src]="tooltip.teamBadge"
+                  [alt]="tooltip.teamName || ''"
+                  (error)="onBadgeError($event, tooltip.teamName)"
+                  class="flag-img-sm"
+                />
+              } @else {
+                <span class="tooltip-badge">{{ tooltip.teamBadge }}</span>
+              }
+            }
+            <span>{{ tooltip.teamName }}</span>
+          </div>
+        }
+        <div class="tooltip-age-tag">EDAD {{ tooltip.age }}</div>
+      </div>
+    }
+  </div>
+}

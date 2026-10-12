@@ -1,0 +1,17 @@
+<div class="game-wrapper">
+  <div class="bg-grid"></div>
+
+  <app-legend-navbar></app-legend-navbar>
+
+  @if (screen() === 'setup-creation') {
+    <app-setupgame></app-setupgame>
+  }
+  @if (screen() === 'career-main') {
+    <app-ongame></app-ongame>
+  }
+  @if (screen() === 'game-over') {
+    <app-gameover></app-gameover>
+  }
+
+  <app-legend-footer></app-legend-footer>
+</div>
