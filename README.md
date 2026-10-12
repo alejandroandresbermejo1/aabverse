@@ -24,6 +24,16 @@ Más allá de ser un sitio de juegos, utilizo **AABVerse** para experimentar y e
 
 ---
 
+## Tecnologías utilizadas
+
+- **Frontend**: Angular 21 y Vercel Analytics.
+- **Backend**: Python, FastAPI y Uvicorn.
+- **Base de datos**: Neon (PostgreSQL).
+- **Despliegue e infraestructura**: Vercel (Frontend SPA y Backend Serverless).
+- **Gestor de paquetes y herramientas**: pnpm, Git y GitHub (arquitectura monorepo).
+
+---
+
 ## Minijuegos
 
 ### 1. Legend Player: Modo Carrera
@@ -44,7 +54,7 @@ Un juego de puntería y reflejos pensado para jugar con ratón:
   - **Caza**: dianas en constante movimiento cruzando la pantalla en horizontal y vertical.
 - **Tipos de dianas**: estándar (+100 puntos), doradas rápidas (+500 puntos) y rojas de penalización (-150 puntos y pérdida de vida).
 - **Personalización de mirilla**: opción de elegir entre mirilla clásica, de punto o el cursor por defecto.
-- **Tabla de récords**: guarda tus mejores marcas al jugar en dificultad Difícil.
+- **Tabla de récords**: guarda tus mejores marcas al jugar en dificultad Difícil mediante una base de datos en Neon.
 - **Aviso para móviles**: como requiere precisión de ratón, si entras desde el móvil o pantalla pequeña verás un aviso claro indicando que solo está disponible en ordenador.
 
 ### 3. Próximos lanzamientos
