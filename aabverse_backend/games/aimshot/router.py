@@ -70,7 +70,7 @@ def submit_score(payload: ScoreSubmission):
         player_name = "Anónimo"
     player_name = player_name[:20]
 
-    if payload.score <= 0:
+    if payload.score < 0:
         return RecordResponse(
             is_new_record=False,
             record=0,
