@@ -13,6 +13,7 @@ export class NavbarComponent {
   classicHighScore = input<number>(0);
   survivalHighScore = input<number>(0);
   huntHighScore = input<number>(0);
+  isLoadingRecords = input<boolean>(false);
   resetHighScore = output<void>();
   goHome = output<void>();
 

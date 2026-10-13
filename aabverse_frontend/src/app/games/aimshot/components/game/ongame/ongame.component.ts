@@ -102,6 +102,7 @@ export class OngameComponent implements OnDestroy {
     this.maxLives.set(startingLives);
     this.lives.set(startingLives);
 
+    this.sessionStartTime = Date.now();
     this.gameState.set('playing');
     this.startTimers();
   }
@@ -112,6 +113,8 @@ export class OngameComponent implements OnDestroy {
     this.targets.set([]);
     this.feedbacks.set([]);
   }
+
+  private sessionStartTime = 0;
 
   private startTimers() {
     this.clearTimers();
@@ -130,20 +133,7 @@ export class OngameComponent implements OnDestroy {
       }, 1000);
     }
 
-    let spawnInterval = 800;
-    if (currentMode === 'caza') {
-      const huntSpeedMap = { facil: 900, normal: 700, dificil: 500 };
-      spawnInterval = huntSpeedMap[this.difficulty()];
-    } else {
-      const speedMap = { facil: 1000, normal: 800, dificil: 550 };
-      spawnInterval = speedMap[this.difficulty()];
-    }
-
-    this.targetSpawner = setInterval(() => {
-      if (this.gameState() === 'playing') {
-        this.spawnTarget();
-      }
-    }, spawnInterval);
+    this.scheduleNextSpawn();
 
     this.targetCleaner = setInterval(() => {
       if (this.gameState() !== 'playing') return;
@@ -157,12 +147,77 @@ export class OngameComponent implements OnDestroy {
         );
 
         if (missedTargets.length > 0) {
+          for (const mt of missedTargets) {
+            this.showFeedback(mt.x, mt.y, '-1', 'penalty', true);
+          }
           this.loseLives(missedTargets.length);
         }
       }
 
-      this.targets.update(list => list.filter(t => (now - t.createdAt) < t.durationMs));
-    }, 150);
+      this.targets.update(list => list.filter(t => t.isHit || (now - t.createdAt) < t.durationMs));
+    }, 75);
+  }
+
+  private scheduleNextSpawn() {
+    if (this.gameState() !== 'playing') return;
+
+    const currentMode = this.mode();
+    let spawnDelay = 800;
+
+    if (currentMode === 'caza') {
+      const huntSpeedMap = { facil: 900, normal: 700, dificil: 500 };
+      spawnDelay = huntSpeedMap[this.difficulty()];
+    } else if (currentMode === 'contrareloj') {
+      const speedMap = { facil: 1000, normal: 800, dificil: 550 };
+      spawnDelay = speedMap[this.difficulty()];
+    } else {
+      const elapsedSec = (Date.now() - this.sessionStartTime) / 1000;
+      if (this.difficulty() === 'dificil') {
+        spawnDelay = Math.max(470, Math.round(770 - elapsedSec * 2.7));
+      } else if (this.difficulty() === 'normal') {
+        spawnDelay = Math.max(530, Math.round(880 - elapsedSec * 2.7));
+      } else {
+        spawnDelay = Math.max(680, Math.round(1020 - elapsedSec * 2.3));
+      }
+    }
+
+    this.targetSpawner = setTimeout(() => {
+      if (this.gameState() === 'playing') {
+        this.spawnBatch();
+        this.scheduleNextSpawn();
+      }
+    }, spawnDelay);
+  }
+
+  private spawnBatch() {
+    if (this.gameState() !== 'playing') return;
+
+    const currentMode = this.mode();
+    let batchSize = 1;
+
+    if (currentMode === 'supervivencia') {
+      const elapsedSec = (Date.now() - this.sessionStartTime) / 1000;
+
+      if (this.difficulty() === 'dificil') {
+        if (elapsedSec > 70) {
+          batchSize = Math.random() < 0.34 ? 2 : 1;
+        } else if (elapsedSec > 45) {
+          batchSize = Math.random() < 0.2 ? 2 : 1;
+        } else {
+          batchSize = 1;
+        }
+      } else if (this.difficulty() === 'normal') {
+        if (elapsedSec > 55) {
+          batchSize = Math.random() < 0.18 ? 2 : 1;
+        }
+      } else {
+        batchSize = 1;
+      }
+    }
+
+    for (let i = 0; i < batchSize; i++) {
+      this.spawnTarget();
+    }
   }
 
   private loseLives(amount: number) {
@@ -174,30 +229,101 @@ export class OngameComponent implements OnDestroy {
 
   private spawnTarget() {
     const currentTargets = this.targets();
-    const maxTargetsMap = { facil: 4, normal: 5, dificil: 7 };
-    if (currentTargets.length >= maxTargetsMap[this.difficulty()]) return;
-
+    const activeTargets = currentTargets.filter(t => !t.isHit);
     const currentMode = this.mode();
+    const diff = this.difficulty();
+    const elapsedSec = (Date.now() - this.sessionStartTime) / 1000;
+
+    let maxTargets = { facil: 4, normal: 5, dificil: 7 }[diff];
+    if (currentMode === 'supervivencia') {
+      if (diff === 'dificil') {
+        if (elapsedSec > 60) maxTargets = 6;
+        else maxTargets = 5;
+      } else if (diff === 'normal') {
+        maxTargets = 5;
+      }
+    }
+
+    if (activeTargets.length >= maxTargets) return;
+
     const rand = Math.random();
     let type: TargetType = 'standard';
     let points = 100;
-
-    const durationMultMap = { facil: 1.3, normal: 1.0, dificil: 0.7 };
-    const mult = durationMultMap[this.difficulty()];
-
-    let durationMs = Math.round(2500 * mult);
+    let durationMs = 2500;
     let sizePx = 64;
 
-    if (rand > 0.85) {
-      type = 'golden';
-      points = 500;
-      durationMs = Math.round(1800 * mult);
-      sizePx = 48;
-    } else if (rand > 0.65) {
-      type = 'penalty';
-      points = -150;
-      durationMs = Math.round(2200 * mult);
-      sizePx = 70;
+    if (currentMode === 'supervivencia' && diff === 'dificil') {
+      const baseDuration = Math.max(1040, Math.round(1580 - elapsedSec * 5));
+      const baseSize = Math.max(56, Math.round(63 - elapsedSec * 0.065));
+
+      if (rand > 0.88) {
+        type = 'golden';
+        points = 500;
+        durationMs = Math.max(800, Math.round(1200 - elapsedSec * 4.2));
+        sizePx = Math.max(48, Math.round(baseSize * 0.84));
+      } else if (rand > 0.76) {
+        type = 'penalty';
+        points = -150;
+        durationMs = Math.max(1180, Math.round(1620 - elapsedSec * 5.2));
+        sizePx = Math.round(baseSize * 1.15);
+      } else {
+        type = 'standard';
+        points = 100;
+        durationMs = baseDuration;
+        sizePx = baseSize;
+      }
+    } else if (currentMode === 'supervivencia') {
+      if (diff === 'normal') {
+        const baseDuration = Math.max(750, Math.round(1600 - elapsedSec * 14));
+        const baseSize = Math.max(50, Math.round(62 - elapsedSec * 0.15));
+        if (rand > 0.85) {
+          type = 'golden';
+          points = 500;
+          durationMs = Math.max(550, Math.round(1200 - elapsedSec * 10));
+          sizePx = 44;
+        } else if (rand > 0.68) {
+          type = 'penalty';
+          points = -150;
+          durationMs = Math.max(900, Math.round(1400 - elapsedSec * 10));
+          sizePx = 66;
+        } else {
+          durationMs = baseDuration;
+          sizePx = baseSize;
+        }
+      } else {
+        const baseDuration = Math.max(1200, Math.round(2400 - elapsedSec * 16));
+        if (rand > 0.85) {
+          type = 'golden';
+          points = 500;
+          durationMs = Math.max(850, Math.round(1700 - elapsedSec * 12));
+          sizePx = 48;
+        } else if (rand > 0.72) {
+          type = 'penalty';
+          points = -150;
+          durationMs = Math.max(1400, Math.round(2000 - elapsedSec * 12));
+          sizePx = 70;
+        } else {
+          durationMs = baseDuration;
+          sizePx = 64;
+        }
+      }
+    } else {
+      const durationMultMap = { facil: 1.3, normal: 1.0, dificil: 0.7 };
+      const mult = durationMultMap[diff];
+      durationMs = Math.round(2500 * mult);
+      sizePx = 64;
+
+      if (rand > 0.85) {
+        type = 'golden';
+        points = 500;
+        durationMs = Math.round(1800 * mult);
+        sizePx = 48;
+      } else if (rand > 0.65) {
+        type = 'penalty';
+        points = -150;
+        durationMs = Math.round(2200 * mult);
+        sizePx = 70;
+      }
     }
 
     let x = 50;
@@ -220,7 +346,7 @@ export class OngameComponent implements OnDestroy {
         startX = Math.floor(Math.random() * 70) + 15;
         endX = startX + (Math.random() * 20 - 10);
       } else {
-        const huntHorizontalDurationMap = { facil: 3600, normal: 2800, dificil: 2000 };
+        const huntHorizontalDurationMap = { facil: 3600, normal: 2900, dificil: 2600 };
         durationMs = huntHorizontalDurationMap[this.difficulty()];
 
         const fromLeft = Math.random() > 0.5;
@@ -233,7 +359,7 @@ export class OngameComponent implements OnDestroy {
       x = startX;
       y = startY;
     } else {
-      const minDistance = 12;
+      const minDistance = currentMode === 'supervivencia' && diff === 'dificil' ? 9 : 12;
       let validPosition = false;
       let attempts = 0;
 
@@ -242,7 +368,7 @@ export class OngameComponent implements OnDestroy {
         y = Math.floor(Math.random() * 65) + 18;
         attempts++;
 
-        const hasOverlap = currentTargets.some(t => {
+        const hasOverlap = activeTargets.some(t => {
           const dx = t.x - x;
           const dy = t.y - y;
           return Math.sqrt(dx * dx + dy * dy) < minDistance;
@@ -251,7 +377,7 @@ export class OngameComponent implements OnDestroy {
         if (!hasOverlap) validPosition = true;
       }
 
-      if (!validPosition && currentTargets.length > 0) return;
+      if (!validPosition && activeTargets.length > 0) return;
     }
 
     const newTarget: Target = {
@@ -355,7 +481,10 @@ export class OngameComponent implements OnDestroy {
 
   private clearTimers() {
     if (this.gameTimer) clearInterval(this.gameTimer);
-    if (this.targetSpawner) clearInterval(this.targetSpawner);
+    if (this.targetSpawner) {
+      clearTimeout(this.targetSpawner);
+      clearInterval(this.targetSpawner);
+    }
     if (this.targetCleaner) clearInterval(this.targetCleaner);
   }
 

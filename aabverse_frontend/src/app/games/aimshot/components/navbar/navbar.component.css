@@ -177,6 +177,17 @@
   text-shadow: 0 0 10px rgba(251, 191, 36, 0.45);
 }
 
+.loading-pulse {
+  color: #64748b;
+  text-shadow: none;
+  animation: pulse-records 1.2s infinite ease-in-out;
+}
+
+@keyframes pulse-records {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.9; }
+}
+
 @media (max-width: 768px) {
   .navbar {
     padding: 0 0.85rem;
