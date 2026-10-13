@@ -312,7 +312,6 @@
       </div>
     </div>
 
-    <!-- Columna 3: Leaderboard según el modo seleccionado -->
     <div class="card-col-leaderboard">
       <div class="leaderboard-header">
         <label class="config-label leaderboard-title">
@@ -381,7 +380,12 @@
               >
                 <div class="rank-badge">
                   @if (idx === 0) {
-                    <span class="badge-tag medal-gold">1</span>
+                    <div class="gold-badge-container">
+                      <svg viewBox="0 0 24 24" fill="currentColor" class="crown-mini-icon">
+                        <path d="M2 4l3 12h14l3-12-5 6-5-6-5 6-5-6zm3 14h14v2H5v-2z"/>
+                      </svg>
+                      <span class="badge-tag medal-gold">1</span>
+                    </div>
                   } @else if (idx === 1) {
                     <span class="badge-tag medal-silver">2</span>
                   } @else if (idx === 2) {
@@ -394,15 +398,6 @@
                   <span class="player-name" [title]="entry.player_name">{{
                     entry.player_name
                   }}</span>
-                  <span class="player-diff-tag" [class]="'diff-' + entry.difficulty">
-                    {{
-                      entry.difficulty === 'dificil'
-                        ? 'Difícil'
-                        : entry.difficulty === 'normal'
-                          ? 'Normal'
-                          : 'Fácil'
-                    }}
-                  </span>
                 </div>
                 <div class="player-score">
                   <span class="score-number">{{ entry.score }}</span>

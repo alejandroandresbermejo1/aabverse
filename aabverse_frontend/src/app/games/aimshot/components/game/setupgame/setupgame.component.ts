@@ -36,7 +36,10 @@ export class SetupgameComponent {
   }
 
   async loadLeaderboard(m: GameMode) {
-    this.isLoadingLeaderboard.set(true);
+    const current = this.leaderboard();
+    if (current.length === 0) {
+      this.isLoadingLeaderboard.set(true);
+    }
     const data = await this.recordService.fetchLeaderboard(m);
     this.leaderboard.set(data);
     this.isLoadingLeaderboard.set(false);

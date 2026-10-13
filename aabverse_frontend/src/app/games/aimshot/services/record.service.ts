@@ -49,15 +49,46 @@ export class RecordService {
     return this.fetchPromise;
   }
 
-  async fetchLeaderboard(mode: string): Promise<LeaderboardEntry[]> {
-    try {
-      const response = await fetch(`${this.API_URL}/leaderboard?mode=${encodeURIComponent(mode)}`);
-      if (!response.ok) return [];
-      const data: LeaderboardEntry[] = await response.json();
-      return Array.isArray(data) ? data : [];
-    } catch (e) {
-      console.warn('Error al obtener el leaderboard.', e);
-      return [];
+  private cachedLeaderboards: Record<string, LeaderboardEntry[]> = {};
+  private leaderboardPromises: Record<string, Promise<LeaderboardEntry[]> | null> = {};
+
+  async preloadAllLeaderboards(): Promise<void> {
+    const modes = ['contrareloj', 'supervivencia', 'caza'];
+    await Promise.all(modes.map(m => this.fetchLeaderboard(m)));
+  }
+
+  async fetchLeaderboard(mode: string, forceRefresh = false): Promise<LeaderboardEntry[]> {
+    if (!forceRefresh && this.cachedLeaderboards[mode]) {
+      return this.cachedLeaderboards[mode];
+    }
+    if (this.leaderboardPromises[mode]) {
+      return this.leaderboardPromises[mode]!;
+    }
+
+    this.leaderboardPromises[mode] = (async () => {
+      try {
+        const response = await fetch(`${this.API_URL}/leaderboard?mode=${encodeURIComponent(mode)}`);
+        if (!response.ok) return this.cachedLeaderboards[mode] ?? [];
+        const data: LeaderboardEntry[] = await response.json();
+        const list = Array.isArray(data) ? data : [];
+        this.cachedLeaderboards[mode] = list;
+        return list;
+      } catch (e) {
+        console.warn('Error al obtener el leaderboard.', e);
+        return this.cachedLeaderboards[mode] ?? [];
+      } finally {
+        this.leaderboardPromises[mode] = null;
+      }
+    })();
+
+    return this.leaderboardPromises[mode]!;
+  }
+
+  invalidateLeaderboard(mode?: string) {
+    if (mode) {
+      delete this.cachedLeaderboards[mode];
+    } else {
+      this.cachedLeaderboards = {};
     }
   }
 
@@ -81,8 +112,12 @@ export class RecordService {
       });
       if (!response.ok) return null;
       const res: RecordResponse = await response.json();
-      if (res && res.is_new_record && this.cachedRecords) {
-        this.cachedRecords[mode] = res.record;
+      if (res) {
+        if (res.is_new_record && this.cachedRecords) {
+          this.cachedRecords[mode] = res.record;
+        }
+        this.invalidateLeaderboard(mode);
+        this.fetchLeaderboard(mode, true);
       }
       return res;
     } catch (e) {

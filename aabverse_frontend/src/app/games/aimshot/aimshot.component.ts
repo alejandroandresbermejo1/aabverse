@@ -29,6 +29,7 @@ export class AimshotComponent implements OnInit {
   constructor(private recordService: RecordService) {}
 
   async ngOnInit() {
+    this.recordService.preloadAllLeaderboards();
     await this.syncRemoteRecords();
   }
 
