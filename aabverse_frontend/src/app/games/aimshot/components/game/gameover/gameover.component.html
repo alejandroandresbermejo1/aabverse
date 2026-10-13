@@ -5,7 +5,14 @@
 
   <div class="gameover-columns">
     <div class="gameover-col-main">
-      <label class="section-title">Resumen de Resultados</label>
+      <label class="section-title">
+        <svg class="title-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="8" x2="12" y2="12" />
+          <line x1="12" y1="16" x2="12.01" y2="16" />
+        </svg>
+        Resumen de Resultados
+      </label>
 
       <div class="stats-container">
         <div class="stat-row">
@@ -76,7 +83,17 @@
     </div>
 
     <div class="gameover-col-targets">
-      <label class="section-title">Desglose de Dianas</label>
+      <label class="section-title">
+        <svg class="title-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9" />
+          <circle cx="12" cy="12" r="4" />
+          <line x1="12" y1="2" x2="12" y2="7" />
+          <line x1="12" y1="17" x2="12" y2="22" />
+          <line x1="2" y1="12" x2="7" y2="12" />
+          <line x1="17" y1="12" x2="22" y2="12" />
+        </svg>
+        Desglose de Dianas
+      </label>
 
       <div class="targets-breakdown-list">
         <div class="target-breakdown-card card-standard">
@@ -155,6 +172,67 @@
   </div>
 
   <div class="gameover-footer-block">
+    <!-- Registro en el Leaderboard -->
+    <div class="leaderboard-register-card">
+      <div class="register-header">
+        <label class="config-label register-label">
+          <svg class="title-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+          Registrar en la Clasificación
+        </label>
+      </div>
+
+      @if (!isSaved()) {
+        <form (ngSubmit)="onSubmitName()" class="register-form" (mousedown)="$event.stopPropagation()">
+          <input
+            type="text"
+            maxlength="20"
+            [ngModel]="playerName()"
+            (ngModelChange)="playerName.set($event)"
+            name="playerName"
+            placeholder="Tu nombre o apodo..."
+            class="player-name-input"
+            [disabled]="isSubmitting()"
+            autocomplete="off"
+          />
+          <button
+            type="submit"
+            class="save-score-btn"
+            [disabled]="isSubmitting()"
+          >
+            @if (isSubmitting()) {
+              <span class="spinner-small"></span>
+              GUARDANDO...
+            } @else {
+              <svg
+                class="save-svg-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                <polyline points="17 21 17 13 7 13 7 21" />
+                <polyline points="7 3 7 8 15 8" />
+              </svg>
+              GUARDAR PUNTUACIÓN
+            }
+          </button>
+        </form>
+      } @else {
+        <div class="register-success">
+          <svg class="success-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          <span>{{ saveMessage() || ('Puntuación registrada con éxito para ' + (playerName() || 'Anónimo')) }}</span>
+        </div>
+      }
+    </div>
+
     @if (difficulty() !== 'dificil') {
       <div class="record-warning-note">
         <svg
@@ -171,8 +249,8 @@
           <line x1="12" y1="16" x2="12.01" y2="16" />
         </svg>
         <span>
-          Para registrar un nuevo récord de este modo debes jugar en dificultad
-          <strong>Difícil</strong>.
+          Para registrar un nuevo récord global de este modo debes jugar en dificultad
+          <strong>Difícil</strong> (el leaderboard registra todas las partidas).
         </span>
       </div>
     }

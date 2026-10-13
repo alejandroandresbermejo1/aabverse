@@ -1,4 +1,4 @@
-import { Component, signal, OnInit } from '@angular/core';
+import { Component, signal, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { OngameComponent } from './components/game/ongame/ongame.component';
@@ -16,6 +16,8 @@ export type CrosshairStyle = 'defecto' | 'punto' | 'clasica';
   styleUrl: './aimshot.component.css'
 })
 export class AimshotComponent implements OnInit {
+  @ViewChild('gameComp') gameComp?: OngameComponent;
+
   classicHighScore = signal<number>(0);
   survivalHighScore = signal<number>(0);
   huntHighScore = signal<number>(0);
@@ -54,29 +56,42 @@ export class AimshotComponent implements OnInit {
     score: number;
     mode: 'contrareloj' | 'supervivencia' | 'caza';
     difficulty: DifficultyLevel;
+    playerName: string;
   }) {
-    if (event.difficulty !== 'dificil') {
-      return;
-    }
-
     let finalScore = event.score;
 
-    const response = await this.recordService.submitScore(event.mode, event.difficulty, event.score);
-    if (response && response.record !== undefined) {
-      finalScore = response.record;
+    const response = await this.recordService.submitScore(
+      event.mode,
+      event.difficulty,
+      event.score,
+      event.playerName
+    );
+    if (response) {
+      if (response.record !== undefined) {
+        finalScore = response.record;
+      }
+      if (this.gameComp) {
+        this.gameComp.notifyScoreSaved(response.message);
+      }
+    } else {
+      if (this.gameComp) {
+        this.gameComp.notifyScoreSaved('No se pudo conectar con el servidor.');
+      }
     }
 
-    if (event.mode === 'contrareloj') {
-      if (finalScore > this.classicHighScore()) {
-        this.classicHighScore.set(finalScore);
-      }
-    } else if (event.mode === 'supervivencia') {
-      if (finalScore > this.survivalHighScore()) {
-        this.survivalHighScore.set(finalScore);
-      }
-    } else if (event.mode === 'caza') {
-      if (finalScore > this.huntHighScore()) {
-        this.huntHighScore.set(finalScore);
+    if (event.difficulty === 'dificil') {
+      if (event.mode === 'contrareloj') {
+        if (finalScore > this.classicHighScore()) {
+          this.classicHighScore.set(finalScore);
+        }
+      } else if (event.mode === 'supervivencia') {
+        if (finalScore > this.survivalHighScore()) {
+          this.survivalHighScore.set(finalScore);
+        }
+      } else if (event.mode === 'caza') {
+        if (finalScore > this.huntHighScore()) {
+          this.huntHighScore.set(finalScore);
+        }
       }
     }
   }

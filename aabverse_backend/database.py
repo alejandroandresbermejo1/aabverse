@@ -22,11 +22,11 @@ def init_db():
             cur.execute("""
                 CREATE TABLE IF NOT EXISTS aimshot.records (
                     id SERIAL PRIMARY KEY,
+                    player_name VARCHAR(20) DEFAULT 'Anónimo',
                     mode VARCHAR(50) NOT NULL,
                     difficulty VARCHAR(50) NOT NULL,
                     record INT NOT NULL,
-                    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-                    CONSTRAINT unique_mode_diff UNIQUE (mode, difficulty)
+                    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
                 );
             """)
         conn.commit()

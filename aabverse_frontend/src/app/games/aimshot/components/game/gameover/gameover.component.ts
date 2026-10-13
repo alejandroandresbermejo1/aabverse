@@ -1,8 +1,11 @@
-import { Component, input, output } from '@angular/core';
+import { Component, input, output, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-gameover',
   standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './gameover.component.html',
   styleUrl: './gameover.component.css'
 })
@@ -18,6 +21,25 @@ export class GameoverComponent {
 
   restartGame = output<void>();
   goHome = output<void>();
+  saveScore = output<string>();
+
+  playerName = signal<string>('');
+  isSubmitting = signal<boolean>(false);
+  isSaved = signal<boolean>(false);
+  saveMessage = signal<string>('');
+
+  setSaveResult(msg: string) {
+    this.saveMessage.set(msg);
+    this.isSubmitting.set(false);
+    this.isSaved.set(true);
+  }
+
+  onSubmitName() {
+    if (this.isSubmitting() || this.isSaved()) return;
+    const name = this.playerName().trim() || 'Anónimo';
+    this.isSubmitting.set(true);
+    this.saveScore.emit(name);
+  }
 
   onRestart() {
     this.restartGame.emit();

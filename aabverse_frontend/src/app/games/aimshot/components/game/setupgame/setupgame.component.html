@@ -14,12 +14,25 @@
           </svg>
         </div>
         <h2 class="card-title">¡PON A PRUEBA TU PUNTERÍA!</h2>
-        <span class="card-subtitle">Campo de Entrenamiento de Precisión</span>
       </div>
 
       <div class="controls-and-legend-group">
         <div class="controls-section">
-          <label class="config-label controls-title">Controles</label>
+          <label class="config-label controls-title">
+            <svg
+              class="title-svg-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect x="2" y="6" width="20" height="12" rx="2" />
+              <path d="M6 12h4m-2-2v4m7-2h.01m3 0h.01" />
+            </svg>
+            Controles
+          </label>
           <div class="controls-guide-banner">
             <div class="control-item">
               <div class="control-icon-box">
@@ -65,7 +78,22 @@
         </div>
 
         <div class="legend-section">
-          <label class="config-label legend-title">Puntuación</label>
+          <label class="config-label legend-title">
+            <svg
+              class="title-svg-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+              />
+            </svg>
+            Puntuación
+          </label>
           <div class="legend-grid">
             <div class="legend-item legend-item-standard">
               <div class="mini-target">
@@ -114,7 +142,21 @@
     <div class="card-col-config">
       <div class="config-section">
         <div class="config-group">
-          <label class="config-label">Modo de Juego</label>
+          <label class="config-label">
+            <svg
+              class="title-svg-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <polygon points="10 8 16 12 10 16 10 8" />
+            </svg>
+            Modo de Juego
+          </label>
           <div class="selector-buttons">
             <button
               type="button"
@@ -165,15 +207,25 @@
               <line x1="12" y1="8" x2="12" y2="12" />
               <line x1="12" y1="16" x2="12.01" y2="16" />
             </svg>
-            <span>
-              Solo en dificultad <strong>Difícil</strong> se registrará la puntuación si supera el
-              récord actual del modo.
-            </span>
+            <span> Solo en dificultad <strong>Difícil</strong> se registrará la puntuación. </span>
           </div>
         </div>
 
         <div class="config-group">
-          <label class="config-label">Dificultad</label>
+          <label class="config-label">
+            <svg
+              class="title-svg-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+            </svg>
+            Dificultad
+          </label>
           <div class="selector-buttons">
             <button
               type="button"
@@ -212,7 +264,24 @@
         </div>
 
         <div class="config-group">
-          <label class="config-label">Mirilla / Ratón</label>
+          <label class="config-label">
+            <svg
+              class="title-svg-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <line x1="22" y1="12" x2="18" y2="12" />
+              <line x1="6" y1="12" x2="2" y2="12" />
+              <line x1="12" y1="6" x2="12" y2="2" />
+              <line x1="12" y1="22" x2="12" y2="18" />
+            </svg>
+            Mirilla / Ratón
+          </label>
           <div class="selector-buttons">
             <button
               type="button"
@@ -240,6 +309,109 @@
             </button>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- Columna 3: Leaderboard según el modo seleccionado -->
+    <div class="card-col-leaderboard">
+      <div class="leaderboard-header">
+        <label class="config-label leaderboard-title">
+          <svg
+            class="aim-scope-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <circle cx="12" cy="12" r="9" />
+            <circle cx="12" cy="12" r="4" />
+            <line x1="12" y1="2" x2="12" y2="7" />
+            <line x1="12" y1="17" x2="12" y2="22" />
+            <line x1="2" y1="12" x2="7" y2="12" />
+            <line x1="17" y1="12" x2="22" y2="12" />
+          </svg>
+          Top 10 -
+          {{
+            mode() === 'contrareloj'
+              ? 'Contrareloj'
+              : mode() === 'supervivencia'
+                ? 'Supervivencia'
+                : 'Caza'
+          }}
+        </label>
+      </div>
+
+      <div class="leaderboard-container">
+        @if (isLoadingLeaderboard()) {
+          <div class="leaderboard-empty-state">
+            <span class="loading-spinner"></span>
+            <span>Cargando clasificación...</span>
+          </div>
+        } @else if (leaderboard().length === 0) {
+          <div class="leaderboard-empty-state">
+            <div class="empty-trophy-box">
+              <svg
+                class="empty-trophy-svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
+                <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
+                <path d="M4 22h16" />
+                <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
+                <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
+                <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
+              </svg>
+            </div>
+            <span class="empty-title">Sin récords aún</span>
+            <span class="empty-desc">Sé el primero en desafiar la clasificación.</span>
+          </div>
+        } @else {
+          <div class="leaderboard-list">
+            @for (entry of leaderboard(); track entry.id; let idx = $index) {
+              <div
+                class="leaderboard-row"
+                [class.rank-gold]="idx === 0"
+                [class.rank-silver]="idx === 1"
+                [class.rank-bronze]="idx === 2"
+              >
+                <div class="rank-badge">
+                  @if (idx === 0) {
+                    <span class="badge-tag medal-gold">1</span>
+                  } @else if (idx === 1) {
+                    <span class="badge-tag medal-silver">2</span>
+                  } @else if (idx === 2) {
+                    <span class="badge-tag medal-bronze">3</span>
+                  } @else {
+                    <span class="badge-tag medal-default">{{ idx + 1 }}</span>
+                  }
+                </div>
+                <div class="player-info">
+                  <span class="player-name" [title]="entry.player_name">{{
+                    entry.player_name
+                  }}</span>
+                  <span class="player-diff-tag" [class]="'diff-' + entry.difficulty">
+                    {{
+                      entry.difficulty === 'dificil'
+                        ? 'Difícil'
+                        : entry.difficulty === 'normal'
+                          ? 'Normal'
+                          : 'Fácil'
+                    }}
+                  </span>
+                </div>
+                <div class="player-score">
+                  <span class="score-number">{{ entry.score }}</span>
+                  <span class="score-unit">pts</span>
+                </div>
+              </div>
+            }
+          </div>
+        }
       </div>
     </div>
   </div>

@@ -24,7 +24,12 @@ interface ClickFeedback {
 export class OngameComponent implements OnDestroy {
   @ViewChild('gameArea') gameAreaRef!: ElementRef<HTMLDivElement>;
 
-  newScoreEvent = output<{ score: number; mode: GameMode; difficulty: DifficultyLevel }>();
+  newScoreEvent = output<{
+    score: number;
+    mode: GameMode;
+    difficulty: DifficultyLevel;
+    playerName: string;
+  }>();
   crosshairStyleChange = output<CrosshairStyle>();
 
   mode = signal<GameMode>('contrareloj');
@@ -165,59 +170,34 @@ export class OngameComponent implements OnDestroy {
     let spawnDelay = 800;
 
     if (currentMode === 'caza') {
-      const huntSpeedMap = { facil: 900, normal: 700, dificil: 500 };
-      spawnDelay = huntSpeedMap[this.difficulty()];
+      const elapsedSec = (Date.now() - this.sessionStartTime) / 1000;
+      if (this.difficulty() === 'dificil') {
+        spawnDelay = Math.max(380, Math.round(620 - elapsedSec * 2.5));
+      } else if (this.difficulty() === 'normal') {
+        spawnDelay = Math.max(480, Math.round(750 - elapsedSec * 2.5));
+      } else {
+        spawnDelay = Math.max(620, Math.round(920 - elapsedSec * 2.0));
+      }
     } else if (currentMode === 'contrareloj') {
       const speedMap = { facil: 1000, normal: 800, dificil: 550 };
       spawnDelay = speedMap[this.difficulty()];
     } else {
       const elapsedSec = (Date.now() - this.sessionStartTime) / 1000;
       if (this.difficulty() === 'dificil') {
-        spawnDelay = Math.max(470, Math.round(770 - elapsedSec * 2.7));
+        spawnDelay = Math.max(320, Math.round(620 - elapsedSec * 4.6));
       } else if (this.difficulty() === 'normal') {
-        spawnDelay = Math.max(530, Math.round(880 - elapsedSec * 2.7));
+        spawnDelay = Math.max(430, Math.round(750 - elapsedSec * 3.8));
       } else {
-        spawnDelay = Math.max(680, Math.round(1020 - elapsedSec * 2.3));
+        spawnDelay = Math.max(560, Math.round(900 - elapsedSec * 3.2));
       }
     }
 
     this.targetSpawner = setTimeout(() => {
       if (this.gameState() === 'playing') {
-        this.spawnBatch();
+        this.spawnTarget();
         this.scheduleNextSpawn();
       }
     }, spawnDelay);
-  }
-
-  private spawnBatch() {
-    if (this.gameState() !== 'playing') return;
-
-    const currentMode = this.mode();
-    let batchSize = 1;
-
-    if (currentMode === 'supervivencia') {
-      const elapsedSec = (Date.now() - this.sessionStartTime) / 1000;
-
-      if (this.difficulty() === 'dificil') {
-        if (elapsedSec > 70) {
-          batchSize = Math.random() < 0.34 ? 2 : 1;
-        } else if (elapsedSec > 45) {
-          batchSize = Math.random() < 0.2 ? 2 : 1;
-        } else {
-          batchSize = 1;
-        }
-      } else if (this.difficulty() === 'normal') {
-        if (elapsedSec > 55) {
-          batchSize = Math.random() < 0.18 ? 2 : 1;
-        }
-      } else {
-        batchSize = 1;
-      }
-    }
-
-    for (let i = 0; i < batchSize; i++) {
-      this.spawnTarget();
-    }
   }
 
   private loseLives(amount: number) {
@@ -237,10 +217,26 @@ export class OngameComponent implements OnDestroy {
     let maxTargets = { facil: 4, normal: 5, dificil: 7 }[diff];
     if (currentMode === 'supervivencia') {
       if (diff === 'dificil') {
-        if (elapsedSec > 60) maxTargets = 6;
+        if (elapsedSec > 45) maxTargets = 6;
+        else if (elapsedSec > 25) maxTargets = 5;
+        else if (elapsedSec > 12) maxTargets = 4;
+        else maxTargets = 3;
+      } else if (diff === 'normal') {
+        if (elapsedSec > 45) maxTargets = 5;
+        else if (elapsedSec > 20) maxTargets = 4;
+        else maxTargets = 3;
+      } else {
+        if (elapsedSec > 30) maxTargets = 4;
+        else maxTargets = 3;
+      }
+    } else if (currentMode === 'caza') {
+      if (diff === 'dificil') {
+        if (elapsedSec > 60) maxTargets = 7;
+        else if (elapsedSec > 30) maxTargets = 6;
         else maxTargets = 5;
       } else if (diff === 'normal') {
-        maxTargets = 5;
+        if (elapsedSec > 40) maxTargets = 6;
+        else maxTargets = 5;
       }
     }
 
@@ -253,19 +249,19 @@ export class OngameComponent implements OnDestroy {
     let sizePx = 64;
 
     if (currentMode === 'supervivencia' && diff === 'dificil') {
-      const baseDuration = Math.max(1040, Math.round(1580 - elapsedSec * 5));
-      const baseSize = Math.max(56, Math.round(63 - elapsedSec * 0.065));
+      const baseDuration = Math.max(1200, Math.round(1640 - elapsedSec * 4.4));
+      const baseSize = Math.max(55, Math.round(63 - elapsedSec * 0.065));
 
       if (rand > 0.88) {
         type = 'golden';
         points = 500;
-        durationMs = Math.max(800, Math.round(1200 - elapsedSec * 4.2));
-        sizePx = Math.max(48, Math.round(baseSize * 0.84));
-      } else if (rand > 0.76) {
+        durationMs = Math.max(900, Math.round(1280 - elapsedSec * 3.6));
+        sizePx = Math.max(47, Math.round(baseSize * 0.84));
+      } else if (rand > 0.77) {
         type = 'penalty';
         points = -150;
-        durationMs = Math.max(1180, Math.round(1620 - elapsedSec * 5.2));
-        sizePx = Math.round(baseSize * 1.15);
+        durationMs = Math.max(1280, Math.round(1680 - elapsedSec * 3.8));
+        sizePx = baseSize;
       } else {
         type = 'standard';
         points = 100;
@@ -285,7 +281,7 @@ export class OngameComponent implements OnDestroy {
           type = 'penalty';
           points = -150;
           durationMs = Math.max(900, Math.round(1400 - elapsedSec * 10));
-          sizePx = 66;
+          sizePx = baseSize;
         } else {
           durationMs = baseDuration;
           sizePx = baseSize;
@@ -301,7 +297,7 @@ export class OngameComponent implements OnDestroy {
           type = 'penalty';
           points = -150;
           durationMs = Math.max(1400, Math.round(2000 - elapsedSec * 12));
-          sizePx = 70;
+          sizePx = 64;
         } else {
           durationMs = baseDuration;
           sizePx = 64;
@@ -322,7 +318,7 @@ export class OngameComponent implements OnDestroy {
         type = 'penalty';
         points = -150;
         durationMs = Math.round(2200 * mult);
-        sizePx = 70;
+        sizePx = 64;
       }
     }
 
@@ -337,7 +333,11 @@ export class OngameComponent implements OnDestroy {
       const isVertical = Math.random() > 0.65;
 
       if (isVertical) {
-        const huntVerticalDurationMap = { facil: 4200, normal: 3400, dificil: 2500 };
+        const huntVerticalDurationMap = {
+          facil: Math.max(3200, Math.round(4400 - elapsedSec * 10)),
+          normal: Math.max(2600, Math.round(3600 - elapsedSec * 9)),
+          dificil: Math.max(2100, Math.round(2900 - elapsedSec * 8))
+        };
         durationMs = huntVerticalDurationMap[this.difficulty()];
 
         const fromTop = Math.random() > 0.5;
@@ -346,7 +346,11 @@ export class OngameComponent implements OnDestroy {
         startX = Math.floor(Math.random() * 70) + 15;
         endX = startX + (Math.random() * 20 - 10);
       } else {
-        const huntHorizontalDurationMap = { facil: 3600, normal: 2900, dificil: 2600 };
+        const huntHorizontalDurationMap = {
+          facil: Math.max(2800, Math.round(3700 - elapsedSec * 8)),
+          normal: Math.max(2200, Math.round(3000 - elapsedSec * 7)),
+          dificil: Math.max(1850, Math.round(2550 - elapsedSec * 6.5))
+        };
         durationMs = huntHorizontalDurationMap[this.difficulty()];
 
         const fromLeft = Math.random() > 0.5;
@@ -472,11 +476,23 @@ export class OngameComponent implements OnDestroy {
     this.clearTimers();
     this.gameState.set('ended');
     this.targets.set([]);
+  }
+
+  @ViewChild('gameoverComp') gameoverComp?: GameoverComponent;
+
+  onSaveScore(playerName: string) {
     this.newScoreEvent.emit({
       score: this.score(),
       mode: this.mode(),
-      difficulty: this.difficulty()
+      difficulty: this.difficulty(),
+      playerName: playerName || 'Anónimo'
     });
+  }
+
+  notifyScoreSaved(message: string) {
+    if (this.gameoverComp) {
+      this.gameoverComp.setSaveResult(message);
+    }
   }
 
   private clearTimers() {

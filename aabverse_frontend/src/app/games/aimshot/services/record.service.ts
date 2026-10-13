@@ -6,11 +6,20 @@ export interface RecordResponse {
   message: string;
 }
 
+export interface LeaderboardEntry {
+  id: number;
+  player_name: string;
+  mode: string;
+  difficulty: string;
+  score: number;
+  created_at?: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class RecordService {
-  private readonly API_URL = 'https://aabverseback.vercel.app/api/records';
+  private readonly API_URL = 'https://aabverseback.vercel.app/api/games/aimshot';
   private cachedRecords: Record<string, number> | null = null;
   private fetchPromise: Promise<Record<string, number> | null> | null = null;
 
@@ -24,7 +33,7 @@ export class RecordService {
 
     this.fetchPromise = (async () => {
       try {
-        const response = await fetch(this.API_URL);
+        const response = await fetch(`${this.API_URL}/records`);
         if (!response.ok) return null;
         const data = await response.json();
         this.cachedRecords = data;
@@ -40,16 +49,35 @@ export class RecordService {
     return this.fetchPromise;
   }
 
+  async fetchLeaderboard(mode: string): Promise<LeaderboardEntry[]> {
+    try {
+      const response = await fetch(`${this.API_URL}/leaderboard?mode=${encodeURIComponent(mode)}`);
+      if (!response.ok) return [];
+      const data: LeaderboardEntry[] = await response.json();
+      return Array.isArray(data) ? data : [];
+    } catch (e) {
+      console.warn('Error al obtener el leaderboard.', e);
+      return [];
+    }
+  }
+
   async submitScore(
     mode: 'contrareloj' | 'supervivencia' | 'caza',
     difficulty: 'facil' | 'normal' | 'dificil',
     score: number,
+    playerName: string = 'Anónimo'
   ): Promise<RecordResponse | null> {
     try {
-      const response = await fetch(this.API_URL, {
+      const cleanName = playerName.trim() || 'Anónimo';
+      const response = await fetch(`${this.API_URL}/records`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mode, difficulty, score }),
+        body: JSON.stringify({
+          mode,
+          difficulty,
+          score,
+          player_name: cleanName.slice(0, 20)
+        }),
       });
       if (!response.ok) return null;
       const res: RecordResponse = await response.json();

@@ -257,19 +257,19 @@
 .target-wrapper::before {
   content: '';
   position: absolute;
-  top: -14px;
-  left: -14px;
-  right: -14px;
-  bottom: -14px;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
   border-radius: 9999px;
   cursor: inherit;
 }
 
 .target-wrapper.target-flying::before {
-  top: -24px;
-  left: -24px;
-  right: -24px;
-  bottom: -24px;
+  top: -14px;
+  left: -14px;
+  right: -14px;
+  bottom: -14px;
 }
 
 .target-body-container {

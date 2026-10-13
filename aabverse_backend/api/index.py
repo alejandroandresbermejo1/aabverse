@@ -36,5 +36,6 @@ def root():
     return {"message": "Api de AABVerse funcionando correctamente"}
 
 app.include_router(games_router, prefix="/api/games")
-app.include_router(aimshot_records_router, prefix="/api", tags=["Games Records"])
+app.include_router(aimshot_records_router, prefix="/api/games/aimshot", tags=["AimShot Records"])
+app.include_router(aimshot_records_router, prefix="/api", tags=["Legacy AimShot Records"])
 

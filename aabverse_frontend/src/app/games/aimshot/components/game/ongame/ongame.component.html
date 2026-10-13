@@ -132,6 +132,7 @@
 
   @if (gameState() === 'ended') {
     <app-gameover 
+      #gameoverComp
       [score]="score()"
       [accuracy]="accuracy()"
       [totalHits]="totalHits()"
@@ -141,6 +142,7 @@
       [penaltyHits]="penaltyHits()"
       [difficulty]="difficulty()"
       (goHome)="resetToIdle()"
+      (saveScore)="onSaveScore($event)"
       (restartGame)="startGame()" />
   }
 
