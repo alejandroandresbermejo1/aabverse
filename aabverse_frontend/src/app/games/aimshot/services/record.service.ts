@@ -19,7 +19,7 @@ export interface LeaderboardEntry {
   providedIn: 'root',
 })
 export class RecordService {
-  private readonly API_URL = 'https://aabverseback.vercel.app/api/games/aimshot';
+  private readonly API_URL = 'https://aabverseback.vercel.app/games/aimshot';
   private cachedRecords: Record<string, number> | null = null;
   private fetchPromise: Promise<Record<string, number> | null> | null = null;
 
