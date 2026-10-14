@@ -496,6 +496,17 @@
   box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
 }
 
+.player-name-input.input-error {
+  border-color: rgba(244, 63, 94, 0.7);
+  background: rgba(244, 63, 94, 0.08);
+}
+
+.save-score-btn.btn-error {
+  background: linear-gradient(135deg, #e11d48 0%, #be123c 100%);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 3px 12px rgba(225, 29, 72, 0.35);
+}
+
 .save-score-btn:disabled {
   opacity: 0.6;
 }
@@ -536,8 +547,10 @@
 }
 
 .error-icon {
-  width: 1.15rem;
-  height: 1.15rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  min-width: 1.2rem;
+  min-height: 1.2rem;
   flex-shrink: 0;
   color: #f43f5e;
 }

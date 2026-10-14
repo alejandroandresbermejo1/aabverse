@@ -36,6 +36,13 @@ export class GameoverComponent {
   saveMessage = signal<string>('');
   isError = signal<boolean>(false);
 
+  onNameChange(val: string) {
+    this.playerName.set(val);
+    if (this.isError()) {
+      this.isError.set(false);
+    }
+  }
+
   constructor() {
     effect(() => {
       const currentMode = this.mode();

@@ -10,3 +10,5 @@ Thumbs.db
 .env
 .env.*
 !.env.example
+clear_db_records_aimshot.py
+clear_db*.py

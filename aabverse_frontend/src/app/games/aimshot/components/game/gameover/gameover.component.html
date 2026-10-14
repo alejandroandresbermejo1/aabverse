@@ -184,38 +184,36 @@
           </label>
         </div>
 
-        @if (isError()) {
-          <div class="register-error">
-            <svg class="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="12" y1="8" x2="12" y2="12"></line>
-              <line x1="12" y1="16" x2="12.01" y2="16"></line>
-            </svg>
-            <span>{{ saveMessage() }}</span>
-          </div>
-        }
-
         @if (!isSaved()) {
           <form (ngSubmit)="onSubmitName()" class="register-form" (mousedown)="$event.stopPropagation()">
             <input
               type="text"
               maxlength="20"
               [ngModel]="playerName()"
-              (ngModelChange)="playerName.set($event)"
+              (ngModelChange)="onNameChange($event)"
               name="playerName"
               placeholder="Tu nombre o apodo..."
               class="player-name-input"
+              [class.input-error]="isError()"
               [disabled]="isSubmitting()"
               autocomplete="off"
             />
             <button
               type="submit"
               class="save-score-btn"
+              [class.btn-error]="isError()"
               [disabled]="isSubmitting()"
             >
               @if (isSubmitting()) {
                 <span class="spinner-small"></span>
                 GUARDANDO...
+              } @else if (isError()) {
+                <svg class="save-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                  <line x1="12" y1="9" x2="12" y2="13" />
+                  <line x1="12" y1="17" x2="12.01" y2="17" />
+                </svg>
+                EL NOMBRE YA EXISTE
               } @else {
                 <svg
                   class="save-svg-icon"

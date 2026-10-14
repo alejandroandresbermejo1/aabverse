@@ -87,3 +87,5 @@ cython_debug/
 .history/*
 .DS_Store
 Thumbs.db
+clear_db_records_aimshot.py
+clear_db*.py
