@@ -4,233 +4,347 @@
   </div>
 
   <div class="gameover-columns">
-    <div class="gameover-col-main">
-      <label class="section-title">
-        <svg class="title-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10" />
-          <line x1="12" y1="8" x2="12" y2="12" />
-          <line x1="12" y1="16" x2="12.01" y2="16" />
-        </svg>
-        Resumen de Resultados
-      </label>
-
-      <div class="stats-container">
-        <div class="stat-row">
-          <span class="stat-label">
-            <svg
-              class="stat-icon icon-score"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <polygon
-                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
-              />
-            </svg>
-            Puntuación
-          </span>
-          <span class="stat-value value-score">{{ score() }} pts</span>
-        </div>
-
-        <div class="stat-row">
-          <span class="stat-label">
-            <svg
-              class="stat-icon icon-accuracy"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
+    <div class="gameover-left-area">
+      <div class="gameover-stats-grid">
+        <div class="gameover-col-main">
+          <label class="section-title">
+            <svg class="title-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="10" />
-              <line x1="22" y1="12" x2="18" y2="12" />
-              <line x1="6" y1="12" x2="2" y2="12" />
-              <line x1="12" y1="6" x2="12" y2="2" />
-              <line x1="12" y1="22" x2="12" y2="18" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
             </svg>
-            Precisión
-          </span>
-          <span class="stat-value value-accuracy">{{ accuracy() }}%</span>
+            Resumen de Resultados
+          </label>
+
+          <div class="stats-container">
+            <div class="stat-row">
+              <span class="stat-label">
+                <svg
+                  class="stat-icon icon-score"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polygon
+                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                  />
+                </svg>
+                Puntuación
+              </span>
+              <span class="stat-value value-score">{{ score() }} pts</span>
+            </div>
+
+            <div class="stat-row">
+              <span class="stat-label">
+                <svg
+                  class="stat-icon icon-accuracy"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="22" y1="12" x2="18" y2="12" />
+                  <line x1="6" y1="12" x2="2" y2="12" />
+                  <line x1="12" y1="6" x2="12" y2="2" />
+                  <line x1="12" y1="22" x2="12" y2="18" />
+                </svg>
+                Precisión
+              </span>
+              <span class="stat-value value-accuracy">{{ accuracy() }}%</span>
+            </div>
+
+            <div class="stat-row">
+              <span class="stat-label">
+                <svg
+                  class="stat-icon icon-hits"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M9 12l2 2 4-4" />
+                </svg>
+                Aciertos / Fallos
+              </span>
+              <span class="stat-value">
+                <span class="text-green">{{ totalHits() }}</span>
+                <span class="text-slash"> / </span>
+                <span class="text-red">{{ totalShots() > totalHits() ? totalShots() - totalHits() : 0 }}</span>
+              </span>
+            </div>
+          </div>
         </div>
 
-        <div class="stat-row">
-          <span class="stat-label">
-            <svg
-              class="stat-icon icon-hits"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <circle cx="12" cy="12" r="10" />
-              <path d="M9 12l2 2 4-4" />
+        <div class="gameover-col-targets">
+          <label class="section-title">
+            <svg class="title-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9" />
+              <circle cx="12" cy="12" r="4" />
+              <line x1="12" y1="2" x2="12" y2="7" />
+              <line x1="12" y1="17" x2="12" y2="22" />
+              <line x1="2" y1="12" x2="7" y2="12" />
+              <line x1="17" y1="12" x2="22" y2="12" />
             </svg>
-            Aciertos / Fallos
-          </span>
-          <span class="stat-value">
-            <span class="text-green">{{ totalHits() }}</span>
-            <span class="text-slash"> / </span>
-            <span class="text-red">{{ totalShots() > totalHits() ? totalShots() - totalHits() : 0 }}</span>
-          </span>
+            Desglose de Dianas
+          </label>
+
+          <div class="targets-breakdown-list">
+            <div class="target-breakdown-card card-standard">
+              <div class="mini-target">
+                <div class="ring-outer-rim">
+                  <div class="ring-middle-white">
+                    <div class="ring-inner-blue">
+                      <div class="ring-center-dot"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="target-info">
+                <span class="target-name">Estándar</span>
+                <span class="target-pts-val">+100 pts / c.u.</span>
+              </div>
+              <div class="target-badge-wrapper">
+                <div class="target-count-badge badge-standard">
+                  x{{ standardHits() }}
+                </div>
+                <span class="target-total-pts points-positive">
+                  +{{ standardHits() * 100 }} pts
+                </span>
+              </div>
+            </div>
+
+            <div class="target-breakdown-card card-golden">
+              <div class="mini-target">
+                <div class="ring-outer-rim-gold">
+                  <div class="ring-middle-amber">
+                    <div class="ring-inner-yellow">
+                      <div class="ring-center-gold-dot"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="target-info">
+                <span class="target-name">Dorada</span>
+                <span class="target-pts-val">+500 pts / c.u.</span>
+              </div>
+              <div class="target-badge-wrapper">
+                <div class="target-count-badge badge-golden">
+                  x{{ goldenHits() }}
+                </div>
+                <span class="target-total-pts points-gold">
+                  +{{ goldenHits() * 500 }} pts
+                </span>
+              </div>
+            </div>
+
+            <div class="target-breakdown-card card-penalty">
+              <div class="mini-target">
+                <div class="ring-outer-rim-red">
+                  <div class="ring-middle-black">
+                    <div class="ring-inner-red">
+                      <div class="ring-center-danger-dot"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="target-info">
+                <span class="target-name">Penalización</span>
+                <span class="target-pts-val">-150 pts / c.u.</span>
+              </div>
+              <div class="target-badge-wrapper">
+                <div class="target-count-badge badge-penalty">
+                  x{{ penaltyHits() }}
+                </div>
+                <span class="target-total-pts points-negative">
+                  {{ penaltyHits() > 0 ? '-' + (penaltyHits() * 150) : '0' }} pts
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
+
+      <div class="leaderboard-register-card">
+        <div class="register-header">
+          <label class="config-label register-label">
+            <svg class="title-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+            Registrar en la Clasificación
+          </label>
+        </div>
+
+        @if (isError()) {
+          <div class="register-error">
+            <svg class="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <span>{{ saveMessage() }}</span>
+          </div>
+        }
+
+        @if (!isSaved()) {
+          <form (ngSubmit)="onSubmitName()" class="register-form" (mousedown)="$event.stopPropagation()">
+            <input
+              type="text"
+              maxlength="20"
+              [ngModel]="playerName()"
+              (ngModelChange)="playerName.set($event)"
+              name="playerName"
+              placeholder="Tu nombre o apodo..."
+              class="player-name-input"
+              [disabled]="isSubmitting()"
+              autocomplete="off"
+            />
+            <button
+              type="submit"
+              class="save-score-btn"
+              [disabled]="isSubmitting()"
+            >
+              @if (isSubmitting()) {
+                <span class="spinner-small"></span>
+                GUARDANDO...
+              } @else {
+                <svg
+                  class="save-svg-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                  <polyline points="17 21 17 13 7 13 7 21" />
+                  <polyline points="7 3 7 8 15 8" />
+                </svg>
+                GUARDAR PUNTUACIÓN
+              }
+            </button>
+          </form>
+        } @else {
+          <div class="register-success">
+            <svg class="success-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span>{{ saveMessage() || ('Puntuación registrada con éxito para ' + (playerName() || 'Anónimo')) }}</span>
+          </div>
+        }
       </div>
     </div>
 
-    <div class="gameover-col-targets">
-      <label class="section-title">
-        <svg class="title-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="9" />
-          <circle cx="12" cy="12" r="4" />
-          <line x1="12" y1="2" x2="12" y2="7" />
-          <line x1="12" y1="17" x2="12" y2="22" />
-          <line x1="2" y1="12" x2="7" y2="12" />
-          <line x1="17" y1="12" x2="22" y2="12" />
-        </svg>
-        Desglose de Dianas
-      </label>
+    <div class="gameover-col-leaderboard">
+      <div class="leaderboard-header">
+        <label class="section-title leaderboard-title">
+          <svg
+            class="aim-scope-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <circle cx="12" cy="12" r="9" />
+            <circle cx="12" cy="12" r="4" />
+            <line x1="12" y1="2" x2="12" y2="7" />
+            <line x1="12" y1="17" x2="12" y2="22" />
+            <line x1="2" y1="12" x2="7" y2="12" />
+            <line x1="17" y1="12" x2="22" y2="12" />
+          </svg>
+          Top 10 -
+          {{
+            mode() === 'contrareloj'
+              ? 'Contrareloj'
+              : mode() === 'supervivencia'
+                ? 'Supervivencia'
+                : 'Caza'
+          }}
+        </label>
+      </div>
 
-      <div class="targets-breakdown-list">
-        <div class="target-breakdown-card card-standard">
-          <div class="mini-target">
-            <div class="ring-outer-rim">
-              <div class="ring-middle-white">
-                <div class="ring-inner-blue">
-                  <div class="ring-center-dot"></div>
+      <div class="leaderboard-container">
+        @if (isLoadingLeaderboard()) {
+          <div class="leaderboard-empty-state">
+            <span class="loading-spinner"></span>
+            <span>Cargando clasificación...</span>
+          </div>
+        } @else if (leaderboard().length === 0) {
+          <div class="leaderboard-empty-state">
+            <div class="empty-trophy-box">
+              <svg
+                class="empty-trophy-svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
+                <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
+                <path d="M4 22h16" />
+                <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
+                <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
+                <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
+              </svg>
+            </div>
+            <span class="empty-title">Sin récords aún</span>
+            <span class="empty-desc">Sé el primero en desafiar la clasificación.</span>
+          </div>
+        } @else {
+          <div class="leaderboard-list">
+            @for (entry of leaderboard(); track entry.id; let idx = $index) {
+              <div
+                class="leaderboard-row"
+                [class.rank-gold]="idx === 0"
+                [class.rank-silver]="idx === 1"
+                [class.rank-bronze]="idx === 2"
+              >
+                <div class="rank-badge">
+                  @if (idx === 0) {
+                    <div class="gold-badge-container">
+                      <svg viewBox="0 0 24 24" fill="currentColor" class="crown-mini-icon">
+                        <path d="M2 4l3 12h14l3-12-5 6-5-6-5 6-5-6zm3 14h14v2H5v-2z"/>
+                      </svg>
+                      <span class="badge-tag medal-gold">1</span>
+                    </div>
+                  } @else if (idx === 1) {
+                    <span class="badge-tag medal-silver">2</span>
+                  } @else if (idx === 2) {
+                    <span class="badge-tag medal-bronze">3</span>
+                  } @else {
+                    <span class="badge-tag medal-default">{{ idx + 1 }}</span>
+                  }
+                </div>
+                <div class="player-info">
+                  <span class="player-name" [title]="entry.player_name">{{
+                    entry.player_name
+                  }}</span>
+                </div>
+                <div class="player-score">
+                  <span class="score-number">{{ entry.score }}</span>
+                  <span class="score-unit">pts</span>
                 </div>
               </div>
-            </div>
+            }
           </div>
-          <div class="target-info">
-            <span class="target-name">Estándar</span>
-            <span class="target-pts-val">+100 pts / c.u.</span>
-          </div>
-          <div class="target-badge-wrapper">
-            <div class="target-count-badge badge-standard">
-              x{{ standardHits() }}
-            </div>
-            <span class="target-total-pts points-positive">
-              +{{ standardHits() * 100 }} pts
-            </span>
-          </div>
-        </div>
-
-        <div class="target-breakdown-card card-golden">
-          <div class="mini-target">
-            <div class="ring-outer-rim-gold">
-              <div class="ring-middle-amber">
-                <div class="ring-inner-yellow">
-                  <div class="ring-center-gold-dot"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="target-info">
-            <span class="target-name">Dorada</span>
-            <span class="target-pts-val">+500 pts / c.u.</span>
-          </div>
-          <div class="target-badge-wrapper">
-            <div class="target-count-badge badge-golden">
-              x{{ goldenHits() }}
-            </div>
-            <span class="target-total-pts points-gold">
-              +{{ goldenHits() * 500 }} pts
-            </span>
-          </div>
-        </div>
-
-        <div class="target-breakdown-card card-penalty">
-          <div class="mini-target">
-            <div class="ring-outer-rim-red">
-              <div class="ring-middle-black">
-                <div class="ring-inner-red">
-                  <div class="ring-center-danger-dot"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="target-info">
-            <span class="target-name">Penalización</span>
-            <span class="target-pts-val">-150 pts / c.u.</span>
-          </div>
-          <div class="target-badge-wrapper">
-            <div class="target-count-badge badge-penalty">
-              x{{ penaltyHits() }}
-            </div>
-            <span class="target-total-pts points-negative">
-              {{ penaltyHits() > 0 ? '-' + (penaltyHits() * 150) : '0' }} pts
-            </span>
-          </div>
-        </div>
+        }
       </div>
     </div>
   </div>
 
   <div class="gameover-footer-block">
-    <div class="leaderboard-register-card">
-      <div class="register-header">
-        <label class="config-label register-label">
-          <svg class="title-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-            <circle cx="12" cy="7" r="4" />
-          </svg>
-          Registrar en la Clasificación
-        </label>
-      </div>
-
-      @if (!isSaved()) {
-        <form (ngSubmit)="onSubmitName()" class="register-form" (mousedown)="$event.stopPropagation()">
-          <input
-            type="text"
-            maxlength="20"
-            [ngModel]="playerName()"
-            (ngModelChange)="playerName.set($event)"
-            name="playerName"
-            placeholder="Tu nombre o apodo..."
-            class="player-name-input"
-            [disabled]="isSubmitting()"
-            autocomplete="off"
-          />
-          <button
-            type="submit"
-            class="save-score-btn"
-            [disabled]="isSubmitting()"
-          >
-            @if (isSubmitting()) {
-              <span class="spinner-small"></span>
-              GUARDANDO...
-            } @else {
-              <svg
-                class="save-svg-icon"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
-                <polyline points="17 21 17 13 7 13 7 21" />
-                <polyline points="7 3 7 8 15 8" />
-              </svg>
-              GUARDAR PUNTUACIÓN
-            }
-          </button>
-        </form>
-      } @else {
-        <div class="register-success">
-          <svg class="success-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
-          <span>{{ saveMessage() || ('Puntuación registrada con éxito para ' + (playerName() || 'Anónimo')) }}</span>
-        </div>
-      }
-    </div>
 
     @if (difficulty() !== 'dificil') {
       <div class="record-warning-note">

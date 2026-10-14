@@ -108,6 +108,17 @@ def submit_score(payload: ScoreSubmission):
                         message="Récord no superado."
                     )
 
+            cur.execute("""
+                SELECT id FROM aimshot.records
+                WHERE mode = %s AND LOWER(player_name) = LOWER(%s);
+            """, (payload.mode, player_name))
+            if cur.fetchone():
+                return RecordResponse(
+                    is_new_record=False,
+                    record=payload.score,
+                    message="El nombre ya existe en la clasificación."
+                )
+
             if payload.difficulty != "dificil":
                 return RecordResponse(
                     is_new_record=False,
