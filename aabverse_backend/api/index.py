@@ -8,7 +8,6 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from database import init_db
 from games.router import router as games_router
-from games.aimshot.router import router as aimshot_records_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

@@ -74,13 +74,14 @@ export class OngameComponent implements OnDestroy {
   onGlobalMouseMove(e: MouseEvent) {
     this.lastClientX = e.clientX;
     this.lastClientY = e.clientY;
+    if (e.buttons === 0 && this.isMouseDown) {
+      this.isMouseDown = false;
+    }
   }
 
   @HostListener('window:mouseup', ['$event'])
   onGlobalMouseUp(e: MouseEvent) {
-    if (e.button === 0) {
-      this.isMouseDown = false;
-    }
+    this.isMouseDown = false;
   }
 
   @HostListener('window:keyup', ['$event'])
@@ -96,14 +97,22 @@ export class OngameComponent implements OnDestroy {
       e.preventDefault();
       if (e.repeat || this.isSpaceDown) return;
       this.isSpaceDown = true;
-      const el = document.elementFromPoint(this.lastClientX, this.lastClientY) as HTMLElement | null;
-      const targetWrapper = el?.closest('.target-wrapper') as HTMLElement | null;
-      if (targetWrapper) {
-        targetWrapper.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
-      } else {
-        this.onAreaClick(new MouseEvent('mousedown'));
+      this.triggerShootAt(this.lastClientX, this.lastClientY);
+    }
+  }
+
+  private triggerShootAt(clientX: number, clientY: number) {
+    const el = document.elementFromPoint(clientX, clientY) as HTMLElement | null;
+    const targetWrapper = el?.closest('.target-wrapper') as HTMLElement | null;
+    if (targetWrapper) {
+      const targetId = targetWrapper.getAttribute('data-target-id');
+      const target = this.targets().find(t => t.id === targetId);
+      if (target && !target.isHit) {
+        this.processTargetHit(target, clientX, clientY, targetWrapper);
+        return;
       }
     }
+    this.processMiss();
   }
 
   startGame(e?: MouseEvent) {
@@ -429,17 +438,25 @@ export class OngameComponent implements OnDestroy {
     if (e.button !== undefined && e.button !== 0) return;
     if (this.isMouseDown) return;
     this.isMouseDown = true;
-    this.totalShots.update(s => s + 1);
+    this.processMiss();
   }
 
   onTargetHit(target: Target, event: MouseEvent) {
     event.stopPropagation();
-
     if (this.gameState() !== 'playing' || target.isHit) return;
     if (event.button !== undefined && event.button !== 0) return;
     if (this.isMouseDown) return;
     this.isMouseDown = true;
 
+    const targetElement = (event.currentTarget as HTMLElement) || (event.target as HTMLElement)?.closest('.target-wrapper');
+    this.processTargetHit(target, event.clientX, event.clientY, targetElement);
+  }
+
+  private processMiss() {
+    this.totalShots.update(s => s + 1);
+  }
+
+  private processTargetHit(target: Target, clientX?: number, clientY?: number, targetElement?: HTMLElement | null) {
     this.targets.update(list => list.map(t => t.id === target.id ? { ...t, isHit: true } : t));
 
     this.totalShots.update(s => s + 1);
@@ -461,16 +478,15 @@ export class OngameComponent implements OnDestroy {
     let feedbackX = target.x;
     let feedbackY = target.y;
 
-    const targetElement = (event.currentTarget as HTMLElement) || (event.target as HTMLElement)?.closest('.target-wrapper');
     if (targetElement && this.gameAreaRef?.nativeElement) {
       const areaRect = this.gameAreaRef.nativeElement.getBoundingClientRect();
       const targetRect = targetElement.getBoundingClientRect();
       feedbackX = ((targetRect.left + targetRect.width / 2 - areaRect.left) / areaRect.width) * 100;
       feedbackY = ((targetRect.top + targetRect.height / 2 - areaRect.top) / areaRect.height) * 100;
-    } else if (event.clientX && event.clientY && this.gameAreaRef?.nativeElement) {
+    } else if (clientX !== undefined && clientY !== undefined && this.gameAreaRef?.nativeElement) {
       const areaRect = this.gameAreaRef.nativeElement.getBoundingClientRect();
-      feedbackX = ((event.clientX - areaRect.left) / areaRect.width) * 100;
-      feedbackY = ((event.clientY - areaRect.top) / areaRect.height) * 100;
+      feedbackX = ((clientX - areaRect.left) / areaRect.width) * 100;
+      feedbackY = ((clientY - areaRect.top) / areaRect.height) * 100;
     }
 
     if (target.type === 'penalty') {

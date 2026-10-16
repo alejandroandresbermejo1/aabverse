@@ -76,6 +76,7 @@
     @for (target of targets(); track target.id) {
       <div 
         (mousedown)="onTargetHit(target, $event)"
+        [attr.data-target-id]="target.id"
         class="target-wrapper"
         [class.target-flying]="mode() === 'caza'"
         [class.target-shatter]="target.isHit"
