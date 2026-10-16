@@ -67,6 +67,8 @@ export class OngameComponent implements OnDestroy {
 
   private lastClientX = 0;
   private lastClientY = 0;
+  private isMouseDown = false;
+  private isSpaceDown = false;
 
   @HostListener('window:mousemove', ['$event'])
   onGlobalMouseMove(e: MouseEvent) {
@@ -74,10 +76,26 @@ export class OngameComponent implements OnDestroy {
     this.lastClientY = e.clientY;
   }
 
+  @HostListener('window:mouseup', ['$event'])
+  onGlobalMouseUp(e: MouseEvent) {
+    if (e.button === 0) {
+      this.isMouseDown = false;
+    }
+  }
+
+  @HostListener('window:keyup', ['$event'])
+  onGlobalKeyUp(e: KeyboardEvent) {
+    if (e.code === 'Space') {
+      this.isSpaceDown = false;
+    }
+  }
+
   @HostListener('window:keydown', ['$event'])
   onKeyDown(e: KeyboardEvent) {
     if (e.code === 'Space' && this.gameState() === 'playing') {
       e.preventDefault();
+      if (e.repeat || this.isSpaceDown) return;
+      this.isSpaceDown = true;
       const el = document.elementFromPoint(this.lastClientX, this.lastClientY) as HTMLElement | null;
       const targetWrapper = el?.closest('.target-wrapper') as HTMLElement | null;
       if (targetWrapper) {
@@ -92,6 +110,8 @@ export class OngameComponent implements OnDestroy {
     if (e) {
       e.stopPropagation();
     }
+    this.isMouseDown = false;
+    this.isSpaceDown = false;
     this.score.set(0);
     this.timeLeft.set(45);
     this.totalShots.set(0);
@@ -114,6 +134,8 @@ export class OngameComponent implements OnDestroy {
 
   resetToIdle() {
     this.clearTimers();
+    this.isMouseDown = false;
+    this.isSpaceDown = false;
     this.gameState.set('idle');
     this.targets.set([]);
     this.feedbacks.set([]);
@@ -404,6 +426,9 @@ export class OngameComponent implements OnDestroy {
 
   onAreaClick(e: MouseEvent) {
     if (this.gameState() !== 'playing') return;
+    if (e.button !== undefined && e.button !== 0) return;
+    if (this.isMouseDown) return;
+    this.isMouseDown = true;
     this.totalShots.update(s => s + 1);
   }
 
@@ -411,6 +436,9 @@ export class OngameComponent implements OnDestroy {
     event.stopPropagation();
 
     if (this.gameState() !== 'playing' || target.isHit) return;
+    if (event.button !== undefined && event.button !== 0) return;
+    if (this.isMouseDown) return;
+    this.isMouseDown = true;
 
     this.targets.update(list => list.map(t => t.id === target.id ? { ...t, isHit: true } : t));
 
