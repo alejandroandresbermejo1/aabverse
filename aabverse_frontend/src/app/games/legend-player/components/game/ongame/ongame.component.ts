@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild, ElementRef, effect, HostListener, signal } from '@angular/core';
+import { Component, inject, ViewChild, ElementRef, effect, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GameService } from '../../../services/game.service';
 import { ContractOption, EventChoice, Award } from '../../../models/game.models';
@@ -203,35 +203,6 @@ export class OngameComponent {
             });
           }
         }, 600);
-      }
-    }
-  }
-
-  @HostListener('window:keydown', ['$event'])
-  handleKeyDown(event: KeyboardEvent) {
-    if (this.isSpinningRoulette()) return;
-
-    if (this.activeEventResult()) {
-      if (event.key === 'Escape' || event.key === 'Enter' || event.key === '1' || event.key === ' ') {
-        this.dismissResult();
-      }
-      return;
-    }
-
-    if (this.isSimulating() && !this.pendingEvent()) return;
-
-    const keyIndex = parseInt(event.key, 10) - 1;
-    if (isNaN(keyIndex) || keyIndex < 0) return;
-
-    const evt = this.pendingEvent();
-    if (evt) {
-      if (evt.choices && evt.choices[keyIndex]) {
-        this.onChooseEvent(evt.choices[keyIndex]);
-      }
-    } else {
-      const offers = this.currentOffers();
-      if (offers && offers[keyIndex]) {
-        this.onSelectOffer(offers[keyIndex]);
       }
     }
   }

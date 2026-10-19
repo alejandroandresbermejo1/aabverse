@@ -1,4 +1,4 @@
-import { Component, inject, HostListener, signal, ViewChild, ElementRef, effect } from '@angular/core';
+import { Component, inject, signal, ViewChild, ElementRef, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GameService } from '../../../services/game.service';
 import { handleBadgeError } from '../../../utils/badge-fallback.utils';
@@ -61,18 +61,6 @@ export class GameoverComponent {
 
   onBadgeError(event: Event, teamName?: string, countryFlag?: string) {
     handleBadgeError(event, teamName, countryFlag);
-  }
-
-  @HostListener('window:keydown', ['$event'])
-  handleKeyDown(event: KeyboardEvent) {
-    const target = event.target as HTMLElement;
-    if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA')) return;
-    if (event.key === 'Escape') {
-      this.onNewCareer();
-    }
-    if (event.key === 'r' || event.key === 'R') {
-      this.gameService.setScreen('report');
-    }
   }
 
   player = () => this.gameService.state().player;

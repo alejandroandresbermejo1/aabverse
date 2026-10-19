@@ -1,4 +1,4 @@
-import { Component, inject, HostListener } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { GameService } from '../../../services/game.service';
@@ -33,26 +33,6 @@ export class SetupgameComponent {
   nationality = 'España';
   nationalityFlag = 'https://flagcdn.com/w40/es.png';
   searchTerm = '';
-
-  @HostListener('window:keydown', ['$event'])
-  handleKeyDown(event: KeyboardEvent) {
-    const target = event.target as HTMLElement;
-    const isTyping = target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable);
-
-    if (!isTyping) {
-      if (event.key === '1') {
-        this.selectSpeed('slow');
-      } else if (event.key === '2') {
-        this.selectSpeed('normal');
-      } else if (event.key === '3') {
-        this.selectSpeed('fast');
-      }
-    }
-
-    if (event.key === 'Enter' && this.nickname.trim()) {
-      this.onSubmit();
-    }
-  }
 
   onNumberInput(event: Event) {
     const val = Number((event.target as HTMLInputElement).value);

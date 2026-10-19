@@ -15,12 +15,10 @@
   <div class="nav-actions">
     @if (screen() === 'career-main') {
       <button type="button" class="reset-btn" (click)="resetGame()">
-        <span class="key-badge">ESC</span>
         <span class="btn-text">Reiniciar Carrera</span>
       </button>
     } @else if (screen() === 'game-over') {
       <button type="button" class="reset-btn game-over-nav-btn" (click)="resetGame()">
-        <span class="key-badge">ESC</span>
         <span class="btn-text">Nueva Carrera</span>
       </button>
     }

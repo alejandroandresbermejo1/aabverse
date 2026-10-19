@@ -17,7 +17,6 @@
             [class.active]="selectedSpeed === 'slow'"
             (click)="selectSpeed('slow')"
           >
-            <span class="key-badge">1</span>
             <div class="speed-header">
               <span class="speed-title">Lento</span>
             </div>
@@ -29,7 +28,6 @@
             [class.active]="selectedSpeed === 'normal'"
             (click)="selectSpeed('normal')"
           >
-            <span class="key-badge">2</span>
             <div class="speed-header">
               <span class="speed-title">Normal</span>
             </div>
@@ -41,7 +39,6 @@
             [class.active]="selectedSpeed === 'fast'"
             (click)="selectSpeed('fast')"
           >
-            <span class="key-badge">3</span>
             <div class="speed-header">
               <span class="speed-title">Rápido</span>
             </div>
@@ -279,7 +276,6 @@
 
       <div class="bottom-actions">
         <button type="submit" [disabled]="!creationForm.form.valid" class="btn-confirm">
-          <span class="key-badge">INTRO</span>
           Confirmar identidad
         </button>
       </div>

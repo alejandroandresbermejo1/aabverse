@@ -187,7 +187,6 @@
               }
 
               <button class="btn-confirm" (click)="dismissResult()">
-                <span class="key-badge">1</span>
                 Continuar carrera
               </button>
             </div>
@@ -209,7 +208,6 @@
                       >
                     </div>
                     <span class="accept-tag">
-                      <span class="key-badge">{{ i + 1 }}</span>
                       Aceptar
                     </span>
                   </div>
@@ -278,7 +276,6 @@
                       >
                     </div>
                     <span class="sign-tag" [class.renew-tag]="offer.isRenewal || offer.type === 'Renewal'">
-                      <span class="key-badge">{{ i + 1 }}</span>
                       {{ (offer.isRenewal || offer.type === 'Renewal') ? 'Renovar 1 año' : 'Firmar' }}
                     </span>
                   </div>
