@@ -26,7 +26,7 @@ Más allá de ser un sitio de juegos, utilizo **AABVerse** para experimentar y e
 
 ## Tecnologías utilizadas
 
-- **Frontend**: Angular 21 y Vercel Analytics.
+- **Frontend**: Angular 21, Three.js y Vercel Analytics.
 - **Backend**: Python, FastAPI y Uvicorn.
 - **Base de datos**: Neon (PostgreSQL).
 - **Despliegue e infraestructura**: Vercel (Frontend SPA y Backend Serverless).
@@ -57,7 +57,20 @@ Un juego de puntería y reflejos pensado para jugar con ratón:
 - **Tabla de récords**: guarda tus mejores marcas al jugar en dificultad Difícil mediante una base de datos en Neon.
 - **Aviso para móviles**: como requiere precisión de ratón, si entras desde el móvil o pantalla pequeña verás un aviso claro indicando que solo está disponible en ordenador.
 
-### 3. Próximos lanzamientos
+### 3. Circuit Tycoon: Equipo F1
+
+Un juego de gestión y carreras de coches con vista 3D en tiempo real:
+
+- **Circuito en 3D**: un trazado interactivo donde ves a tu coche competir contra rivales en directo, adelantando y completando vueltas.
+- **Acelera con el ERS**: haz clic o pulsa en la pista para activar el turbo de tu coche, adelantar más rápido y ganar dinero extra al instante.
+- **Mejoras del coche y del equipo**:
+  - **Monoplaza**: mejora el motor, los alerones y la aerodinámica para aumentar tu velocidad y ritmo de carrera.
+  - **Equipo e instalaciones**: contrata mejores mecánicos para el pit stop, ingenieros y patrocinios para conseguir dinero e investigación automáticamente por segundo.
+- **Garaje propio**: cambia el color de tu monoplaza y mira las estadísticas de velocidad media real.
+- **Guarda y exporta tu partida**: se guarda solo en tu navegador y además puedes exportar o importar tu partida en un archivo para no perder nunca tu progreso.
+- **Adaptado a cualquier pantalla**: pensado para jugar cómodamente tanto en ordenador como en el móvil.
+
+### 4. Próximos lanzamientos
 
 La plataforma está pensada para seguir sumando nuevos minijuegos y experimentos interactivos con el tiempo.
 

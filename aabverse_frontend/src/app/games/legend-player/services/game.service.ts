@@ -18,7 +18,7 @@ export function getTrophyIconUrl(name: string, fallbackEmoji: string = ''): stri
   return getTrophyEmoji(name);
 }
 
-const STORAGE_KEY = 'legend_player_career_save_v1';
+const STORAGE_KEY = 'legend_player_save';
 
 @Injectable({
   providedIn: 'root'
@@ -879,6 +879,17 @@ export class GameService {
         newRecords.push(natRecord);
       }
 
+      if (!player.careerStats) {
+        player.careerStats = {
+          matchesPlayed: 0,
+          goals: 0,
+          saves: 0,
+          assists: 0,
+          defensiveActions: 0,
+          titlesWon: 0
+        };
+      }
+
       player.careerStats.matchesPlayed += matchesPlayed;
       player.careerStats.goals += goals;
       player.careerStats.saves += saves;
@@ -1244,7 +1255,55 @@ export class GameService {
 
   private saveToStorage() {
     try {
-      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(this.state()));
+      const s = this.state();
+      const saveSpanish = {
+        velocidad: s.speed,
+        pantalla: s.screen,
+        pantallaPrevia: s.previousScreen,
+        jugador: s.player ? {
+          apodo: s.player.nickname,
+          dorsal: s.player.number,
+          pieHabil: s.player.preferredFoot,
+          posicion: s.player.position,
+          nacionalidad: s.player.nationality,
+          banderaNacionalidad: s.player.nationalityFlag,
+          edadActual: s.player.currentAge,
+          media: s.player.ovr,
+          valorMercado: s.player.marketValue,
+          equipoActual: s.player.currentTeam,
+          equipoPadre: s.player.parentTeam,
+          trofeos: s.player.trophies,
+          estadisticasCarrera: s.player.careerStats ? {
+            partidosJugados: s.player.careerStats.matchesPlayed,
+            goles: s.player.careerStats.goals,
+            paradas: s.player.careerStats.saves,
+            asistencias: s.player.careerStats.assists,
+            accionesDefensivas: s.player.careerStats.defensiveActions,
+            titulosGanados: s.player.careerStats.titlesWon
+          } : null,
+          estadisticasSeleccion: s.player.nationalTeamStats ? {
+            nombreEquipo: s.player.nationalTeamStats.teamName,
+            bandera: s.player.nationalTeamStats.flag,
+            convocatorias: s.player.nationalTeamStats.callups,
+            partidosJugados: s.player.nationalTeamStats.matchesPlayed,
+            goles: s.player.nationalTeamStats.goals,
+            paradas: s.player.nationalTeamStats.saves,
+            asistencias: s.player.nationalTeamStats.assists,
+            accionesDefensivas: s.player.nationalTeamStats.defensiveActions,
+            titulos: s.player.nationalTeamStats.titles
+          } : null
+        } : null,
+        historialTemporadas: s.seasonHistory,
+        ofertasActuales: s.currentOffers,
+        eventoPendiente: s.pendingEvent,
+        resultadoEventoActivo: s.activeEventResult,
+        detallesEventoActivo: s.activeEventDetails,
+        girandoRuleta: s.isSpinningRoulette,
+        simulando: s.isSimulating,
+        palmaresHistorico: s.allTimeAwards,
+        ultimoGuardadoTimestamp: Date.now()
+      };
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(saveSpanish));
     } catch (e) {
       console.warn('SessionStorage save error', e);
     }
@@ -1252,40 +1311,123 @@ export class GameService {
 
   private loadFromStorage() {
     try {
-      const raw = sessionStorage.getItem(STORAGE_KEY);
+      const raw = sessionStorage.getItem(STORAGE_KEY) || sessionStorage.getItem('legend_player_career_save_v1');
       if (raw) {
         const parsed = JSON.parse(raw);
-        if (parsed.player && parsed.player.currentTeam) {
-          parsed.player.currentTeam.badge = getTeamBadgeUrl(parsed.player.currentTeam.id, parsed.player.currentTeam.badge);
+        let player: any = null;
+        const rawPlayer = parsed.jugador ?? parsed.player;
+
+        if (rawPlayer) {
+          const rawStats = rawPlayer.estadisticasCarrera ?? rawPlayer.careerStats;
+          const careerStats = {
+            matchesPlayed: Number(rawStats?.partidosJugados ?? rawStats?.matchesPlayed ?? 0),
+            goals: Number(rawStats?.goles ?? rawStats?.goals ?? 0),
+            saves: Number(rawStats?.paradas ?? rawStats?.saves ?? 0),
+            assists: Number(rawStats?.asistencias ?? rawStats?.assists ?? 0),
+            defensiveActions: Number(rawStats?.accionesDefensivas ?? rawStats?.defensiveActions ?? 0),
+            titlesWon: Number(rawStats?.titulosGanados ?? rawStats?.titlesWon ?? 0)
+          };
+
+          const nationality = rawPlayer.nacionalidad ?? rawPlayer.nationality;
+          const nationalityFlag = rawPlayer.banderaNacionalidad ?? rawPlayer.nationalityFlag;
+          const natInfo = getNationalTeamInfo(nationality, nationalityFlag);
+
+          const rawNatStats = rawPlayer.estadisticasSeleccion ?? rawPlayer.nationalTeamStats;
+          const nationalTeamStats = rawNatStats ? {
+            teamName: rawNatStats.nombreEquipo ?? rawNatStats.teamName ?? natInfo.officialName,
+            flag: rawNatStats.bandera ?? rawNatStats.flag ?? (natInfo.badge || natInfo.flag),
+            callups: Number(rawNatStats.convocatorias ?? rawNatStats.callups ?? 0),
+            matchesPlayed: Number(rawNatStats.partidosJugados ?? rawNatStats.matchesPlayed ?? 0),
+            goals: Number(rawNatStats.goles ?? rawNatStats.goals ?? 0),
+            saves: Number(rawNatStats.paradas ?? rawNatStats.saves ?? 0),
+            assists: Number(rawNatStats.asistencias ?? rawNatStats.assists ?? 0),
+            defensiveActions: Number(rawNatStats.accionesDefensivas ?? rawNatStats.defensiveActions ?? 0),
+            titles: rawNatStats.titulos ?? rawNatStats.titles ?? []
+          } : {
+            teamName: natInfo.officialName,
+            flag: natInfo.badge || natInfo.flag,
+            callups: 0,
+            matchesPlayed: 0,
+            goals: 0,
+            saves: 0,
+            assists: 0,
+            defensiveActions: 0,
+            titles: []
+          };
+
+          const rawTeam = rawPlayer.equipoActual ?? rawPlayer.currentTeam;
+          const currentTeam = rawTeam ? {
+            ...rawTeam,
+            badge: getTeamBadgeUrl(rawTeam.id, rawTeam.badge)
+          } : rawTeam;
+
+          const rawParentTeam = rawPlayer.equipoPadre ?? rawPlayer.parentTeam;
+          const parentTeam = rawParentTeam ? {
+            ...rawParentTeam,
+            badge: getTeamBadgeUrl(rawParentTeam.id, rawParentTeam.badge)
+          } : undefined;
+
+          player = {
+            nickname: rawPlayer.apodo ?? rawPlayer.nickname,
+            number: Number(rawPlayer.dorsal ?? rawPlayer.number ?? 10),
+            preferredFoot: rawPlayer.pieHabil ?? rawPlayer.preferredFoot,
+            position: rawPlayer.posicion ?? rawPlayer.position,
+            nationality,
+            nationalityFlag,
+            currentAge: Number(rawPlayer.edadActual ?? rawPlayer.currentAge ?? 16),
+            ovr: Number(rawPlayer.media ?? rawPlayer.ovr ?? 50),
+            marketValue: Number(rawPlayer.valorMercado ?? rawPlayer.marketValue ?? 0.5),
+            currentTeam,
+            parentTeam,
+            trophies: rawPlayer.trofeos ?? rawPlayer.trophies ?? [],
+            careerStats,
+            nationalTeamStats
+          };
         }
-        if (parsed.player && parsed.player.nationality) {
-          const natInfo = getNationalTeamInfo(parsed.player.nationality, parsed.player.nationalityFlag);
-          if (parsed.player.nationalTeamStats) {
-            parsed.player.nationalTeamStats.teamName = natInfo.officialName;
-            parsed.player.nationalTeamStats.flag = natInfo.badge || natInfo.flag;
-          }
-        }
-        if (parsed.currentOffers && Array.isArray(parsed.currentOffers)) {
-          parsed.currentOffers = parsed.currentOffers.map((o: any) => ({
-            ...o,
-            team: { ...o.team, badge: getTeamBadgeUrl(o.team.id, o.team.badge) }
-          }));
-        }
-        if (parsed.seasonHistory && Array.isArray(parsed.seasonHistory)) {
-          parsed.seasonHistory = parsed.seasonHistory.map((r: any) => ({
-            ...r,
-            team: r.isNationalTeam
-              ? { ...r.team, badge: getNationalTeamInfo(parsed.player?.nationality || r.team.country, r.team.countryFlag).badge || r.team.badge }
-              : { ...r.team, badge: getTeamBadgeUrl(r.team.id, r.team.badge) }
-          }));
-        }
-        if (parsed.allTimeAwards && Array.isArray(parsed.allTimeAwards)) {
-          parsed.allTimeAwards = parsed.allTimeAwards.map((a: any) => ({
-            ...a,
-            icon: (a.icon && a.icon.startsWith('http')) ? a.icon : ''
-          }));
-        }
-        this.state.set(parsed);
+
+        const rawOffers = parsed.ofertasActuales ?? parsed.currentOffers;
+        const currentOffers = Array.isArray(rawOffers) ? rawOffers.map((o: any) => ({
+          ...o,
+          team: { ...o.team, badge: getTeamBadgeUrl(o.team.id, o.team.badge) }
+        })) : [];
+
+        const rawHistory = parsed.historialTemporadas ?? parsed.seasonHistory;
+        const seasonHistory = Array.isArray(rawHistory) ? rawHistory.map((r: any) => ({
+          ...r,
+          team: r.isNationalTeam
+            ? { ...r.team, badge: getNationalTeamInfo(player?.nationality || r.team.country, r.team.countryFlag).badge || r.team.badge }
+            : { ...r.team, badge: getTeamBadgeUrl(r.team.id, r.team.badge) }
+        })) : [];
+
+        const rawAwards = parsed.palmaresHistorico ?? parsed.allTimeAwards;
+        const allTimeAwards = Array.isArray(rawAwards) ? rawAwards.map((a: any) => ({
+          ...a,
+          icon: (a.icon && a.icon.startsWith('http')) ? a.icon : ''
+        })) : [];
+
+        const speed = parsed.velocidad ?? parsed.speed ?? 'slow';
+        const screen = parsed.pantalla ?? parsed.screen ?? 'setup-creation';
+        const previousScreen = parsed.pantallaPrevia ?? parsed.previousScreen;
+        const pendingEvent = parsed.eventoPendiente ?? parsed.pendingEvent ?? null;
+        const activeEventResult = parsed.resultadoEventoActivo ?? parsed.activeEventResult ?? null;
+        const activeEventDetails = parsed.detallesEventoActivo ?? parsed.activeEventDetails ?? null;
+        const isSpinningRoulette = Boolean(parsed.girandoRuleta ?? parsed.isSpinningRoulette ?? false);
+        const isSimulating = Boolean(parsed.simulando ?? parsed.isSimulating ?? false);
+
+        this.state.set({
+          speed,
+          screen,
+          previousScreen,
+          player,
+          seasonHistory,
+          currentOffers,
+          pendingEvent,
+          activeEventResult,
+          activeEventDetails,
+          isSpinningRoulette,
+          isSimulating,
+          allTimeAwards
+        });
       }
     } catch (e) {
       console.warn('SessionStorage load error', e);

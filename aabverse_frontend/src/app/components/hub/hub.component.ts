@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { FooterComponent } from '../footer/footer.component';
+import { RecordService } from '../../games/aimshot/services/record.service';
 
 export interface GameCard {
   id: string;
@@ -11,7 +12,7 @@ export interface GameCard {
   subtitle: string;
   description: string;
   route: string;
-  category: 'Sports / Manager' | 'Shooter / Precision' | 'Arcade' | 'Puzzle';
+  category: 'Sports / Manager' | 'Shooter / Precision' | 'Arcade' | 'Puzzle' | 'Tycoon / Incremental';
   tags: string[];
   logoImg?: string;
   icon?: string;
@@ -29,15 +30,20 @@ export interface GameCard {
   templateUrl: './hub.component.html',
   styleUrl: './hub.component.css'
 })
-export class HubComponent {
+export class HubComponent implements OnInit {
+  private recordService = inject(RecordService);
   searchQuery = '';
+
+  ngOnInit() {
+    this.recordService.fetchRecords();
+  }
 
   games: GameCard[] = [
     {
       id: 'legend-player',
       title: 'Legend Player',
       subtitle: 'Simulador Modo Carrera',
-      description: 'Crea tu propio jugador de fútbol, entrena, toma decisiones de carrera, gestiona tu vida deportiva y conviértete en una leyenda mundial.',
+      description: 'Lleva a tu jugador desde lo más bajo hasta la gloria internacional mientras tomas decisiones y forjas tu leyenda.',
       route: '/games/legend-player',
       category: 'Sports / Manager',
       tags: ['Fútbol', 'Simulación', 'Carrera', 'Estrategia'],
@@ -51,8 +57,8 @@ export class HubComponent {
     {
       id: 'aimshot',
       title: 'AimShot',
-      subtitle: 'Precision Aim Trainer',
-      description: 'Entrena tu puntería, velocidad de reacción y precisión en 3 modos intensos: Clásico, Supervivencia y Cacería.',
+      subtitle: 'Campo de Tiro de Precisión',
+      description: 'Pon a prueba tus reflejos y pulso contra el reloj mientras destruyes dianas y superas los récords mundiales.',
       route: '/games/aimshot',
       category: 'Shooter / Precision',
       tags: ['Aim Trainer', 'FPS', 'Reacción', 'Récords'],
@@ -63,6 +69,21 @@ export class HubComponent {
       bgGlow: 'rgba(244, 63, 94, 0.3)',
       themeColor: '#f43f5e',
       desktopOnly: true
+    },
+    {
+      id: 'circuit-tycoon',
+      title: 'Circuit Tycoon',
+      subtitle: 'Simulador de Escudería F1',
+      description: 'Lleva a tu equipo desde un garaje de barrio hasta lo más alto del automovilismo mundial mientras mejoras tu equipamiento.',
+      route: '/games/circuit-tycoon',
+      category: 'Tycoon / Incremental',
+      tags: ['Fórmula 1', 'Tycoon', 'Incremental', 'Estrategia', 'Coches'],
+      logoImg: 'circuit-tycoon/logo.png',
+      icon: '🏎️',
+      gradient: 'linear-gradient(135deg, #f97316 0%, #dc2626 100%)',
+      badge: 'Nuevo',
+      bgGlow: 'rgba(249, 115, 22, 0.35)',
+      themeColor: '#f97316'
     }
   ];
 

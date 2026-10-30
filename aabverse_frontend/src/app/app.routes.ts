@@ -23,6 +23,13 @@ export const routes: Routes = [
       )
   },
   {
+    path: 'games/circuit-tycoon',
+    loadComponent: () =>
+      import('./games/circuit-tycoon/circuit-tycoon.component').then(
+        (m) => m.CircuitTycoonComponent
+      )
+  },
+  {
     path: 'report',
     loadComponent: () =>
       import('./components/report/report.component').then(

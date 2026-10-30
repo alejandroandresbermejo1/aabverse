@@ -1,0 +1,247 @@
+import { UpgradeItem } from '../models/circuit-game.models';
+
+export const BASE_UPGRADES: Omit<UpgradeItem, 'currentCostMoney' | 'currentCostResearch'>[] = [
+  {
+    id: 'engine_power',
+    name: 'Optimización de Motor',
+    description: 'Aumenta la potencia bruta y la velocidad en recta del monoplaza.',
+    category: 'car',
+    level: 0,
+    maxLevel: 25,
+    baseCostMoney: 25,
+    baseCostResearch: 0,
+    unlockedInPhase: 'iniciacion',
+    multiplierEffect: 1.25
+  },
+  {
+    id: 'aero_wings',
+    name: 'Alerones Delanteros y Difusor',
+    description: 'Mayor carga aerodinámica en curvas y estabilidad en el circuito.',
+    category: 'car',
+    level: 0,
+    maxLevel: 25,
+    baseCostMoney: 75,
+    baseCostResearch: 0,
+    unlockedInPhase: 'iniciacion',
+    multiplierEffect: 1.28
+  },
+  {
+    id: 'brakes_cooling',
+    name: 'Discos y Conductos de Frenos',
+    description: 'Frenada más tardía y segura que genera ingresos por vuelta rápida.',
+    category: 'car',
+    level: 0,
+    maxLevel: 25,
+    baseCostMoney: 120,
+    baseCostResearch: 0,
+    unlockedInPhase: 'iniciacion',
+    multiplierEffect: 1.3
+  },
+  {
+    id: 'pit_mechanics',
+    name: 'Equipo de Mecánicos de Barrio',
+    description: 'Mantenimiento preventivo que genera ganancias pasivas constantes.',
+    category: 'team',
+    level: 0,
+    maxLevel: 25,
+    baseCostMoney: 50,
+    baseCostResearch: 0,
+    unlockedInPhase: 'iniciacion',
+    multiplierEffect: 1.22
+  },
+  {
+    id: 'box_tools',
+    name: 'Herramientas de Precisión en Boxes',
+    description: 'Paradas en boxes más rápidas y optimización del trabajo en el pit lane.',
+    category: 'team',
+    level: 0,
+    maxLevel: 25,
+    baseCostMoney: 95,
+    baseCostResearch: 0,
+    unlockedInPhase: 'iniciacion',
+    multiplierEffect: 1.25
+  },
+  {
+    id: 'driver_training',
+    name: 'Entrenador Físico del Piloto',
+    description: 'Reflejos y resistencia mejorados que aumentan el dinero por clic.',
+    category: 'team',
+    level: 0,
+    maxLevel: 20,
+    baseCostMoney: 160,
+    baseCostResearch: 0,
+    unlockedInPhase: 'iniciacion',
+    multiplierEffect: 1.35
+  },
+
+  {
+    id: 'tires_compound',
+    name: 'Compuestos Blandos de Competición',
+    description: 'Adherencia inmediata y aceleración de paso por vuelta.',
+    category: 'car',
+    level: 0,
+    maxLevel: 25,
+    baseCostMoney: 950,
+    baseCostResearch: 5,
+    unlockedInPhase: 'amateur',
+    multiplierEffect: 1.32
+  },
+  {
+    id: 'telemetry_box',
+    name: 'Adquisición de Datos y Telemetría',
+    description: 'Sensores en el volante que potencian fuertemente cada clic manual.',
+    category: 'car',
+    level: 0,
+    maxLevel: 25,
+    baseCostMoney: 1500,
+    baseCostResearch: 15,
+    unlockedInPhase: 'amateur',
+    multiplierEffect: 1.38
+  },
+  {
+    id: 'gearbox_quick',
+    name: 'Transmisión Secuencial Rápida',
+    description: 'Cambio de marchas instantáneo que exprime el rendimiento pasivo.',
+    category: 'car',
+    level: 0,
+    maxLevel: 20,
+    baseCostMoney: 2800,
+    baseCostResearch: 25,
+    unlockedInPhase: 'amateur',
+    multiplierEffect: 1.4
+  },
+  {
+    id: 'local_sponsors',
+    name: 'Patrocinadores Locales',
+    description: 'Publicidad en los pontones del coche que asegura ingresos continuos.',
+    category: 'team',
+    level: 0,
+    maxLevel: 25,
+    baseCostMoney: 1200,
+    baseCostResearch: 0,
+    unlockedInPhase: 'amateur',
+    multiplierEffect: 1.3
+  },
+  {
+    id: 'motorhome_base',
+    name: 'Hospitality y Base de Operaciones',
+    description: 'Espacio profesional que atrae pequeños inversores y genera I+D.',
+    category: 'team',
+    level: 0,
+    maxLevel: 10,
+    baseCostMoney: 3500,
+    baseCostResearch: 0,
+    unlockedInPhase: 'amateur',
+    multiplierEffect: 1.45
+  },
+
+  {
+    id: 'ers_hybrid',
+    name: 'Sistema Híbrido y Batería ERS',
+    description: 'Recuperación de energía cinética que dispara ingresos y bonos por clic.',
+    category: 'car',
+    level: 0,
+    maxLevel: 25,
+    baseCostMoney: 28000,
+    baseCostResearch: 200,
+    unlockedInPhase: 'profesional',
+    multiplierEffect: 1.5
+  },
+  {
+    id: 'carbon_brakes_pro',
+    name: 'Frenos Carbono-Cerámicos Pro',
+    description: 'Material aeroespacial que eleva drásticamente el ritmo en pista.',
+    category: 'car',
+    level: 0,
+    maxLevel: 20,
+    baseCostMoney: 45000,
+    baseCostResearch: 350,
+    unlockedInPhase: 'profesional',
+    multiplierEffect: 1.55
+  },
+  {
+    id: 'engineers_hire',
+    name: 'Ingenieros de Pista Profesionales',
+    description: 'Especialistas que generan Puntos de I+D y mejoran la eficiencia del equipo.',
+    category: 'team',
+    level: 0,
+    maxLevel: 25,
+    baseCostMoney: 15000,
+    baseCostResearch: 60,
+    unlockedInPhase: 'profesional',
+    multiplierEffect: 1.45
+  },
+  {
+    id: 'wind_tunnel',
+    name: 'Simulador y Túnel de Viento',
+    description: 'Estudios de túnel de viento para generar gran volumen de I+D pasivo.',
+    category: 'team',
+    level: 0,
+    maxLevel: 20,
+    baseCostMoney: 32000,
+    baseCostResearch: 140,
+    unlockedInPhase: 'profesional',
+    multiplierEffect: 1.5
+  },
+  {
+    id: 'global_brands',
+    name: 'Marcas Globales y Derechos TV',
+    description: 'Contratos multimillonarios con marcas internacionales de automoción.',
+    category: 'team',
+    level: 0,
+    maxLevel: 20,
+    baseCostMoney: 85000,
+    baseCostResearch: 600,
+    unlockedInPhase: 'profesional',
+    multiplierEffect: 1.6
+  },
+
+  {
+    id: 'carbon_chassis',
+    name: 'Monocasco de Carbono Aeroespacial',
+    description: 'Chasis de grado militar ultra ligero para el máximo rendimiento.',
+    category: 'car',
+    level: 0,
+    maxLevel: 25,
+    baseCostMoney: 240000,
+    baseCostResearch: 1900,
+    unlockedInPhase: 'elite',
+    multiplierEffect: 1.75
+  },
+  {
+    id: 'ai_race_strategy',
+    name: 'Inteligencia de Datos en Tiempo Real',
+    description: 'Algoritmos que exprimen cada milésima y multiplican las ganancias.',
+    category: 'team',
+    level: 0,
+    maxLevel: 25,
+    baseCostMoney: 650000,
+    baseCostResearch: 4800,
+    unlockedInPhase: 'elite',
+    multiplierEffect: 1.95
+  },
+  {
+    id: 'f1_factory',
+    name: 'Fábrica Tecnológica de F1',
+    description: 'Mega-instalación de ingeniería con producción masiva de I+D y capital.',
+    category: 'team',
+    level: 0,
+    maxLevel: 20,
+    baseCostMoney: 1800000,
+    baseCostResearch: 12000,
+    unlockedInPhase: 'elite',
+    multiplierEffect: 2.2
+  },
+  {
+    id: 'legend_wind_tunnel',
+    name: 'Túnel Criogénico Ultra-Sónico',
+    description: 'La cúspide de la aerodinámica mundial con máximo aporte pasivo y de clic.',
+    category: 'car',
+    level: 0,
+    maxLevel: 20,
+    baseCostMoney: 4500000,
+    baseCostResearch: 25000,
+    unlockedInPhase: 'elite',
+    multiplierEffect: 2.4
+  }
+];
