@@ -74,7 +74,7 @@ export class HubComponent implements OnInit {
       id: 'circuit-tycoon',
       title: 'Circuit Tycoon',
       subtitle: 'Simulador de Escudería F1',
-      description: 'Lleva a tu equipo desde un garaje de barrio hasta lo más alto del automovilismo mundial mientras mejoras tu equipamiento.',
+      description: 'Lleva a tu escudería desde lo más bajo hasta la gloria mientras mejoras tu monoplaza y tu equipo.',
       route: '/games/circuit-tycoon',
       category: 'Tycoon / Incremental',
       tags: ['Fórmula 1', 'Tycoon', 'Incremental', 'Estrategia', 'Coches'],
