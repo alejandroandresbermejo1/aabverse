@@ -40,6 +40,7 @@ Más allá de ser un sitio de juegos, utilizo **AABVerse** para experimentar y e
 
 Un simulador de carrera futbolística donde creas a tu propio jugador y guías su trayectoria:
 
+- **Tecnología clave**: **Angular 21**.
 - **Creación de personaje**: elige tu nombre, nacionalidad, pie dominante y posición en el campo.
 - **Gestión de la carrera**: decisiones clave fuera y dentro del campo, contratos y fichajes por grandes equipos.
 - **Evolución**: sube tus atributos, consigue títulos y forja tu palmarés tanto desde el móvil como desde el ordenador.
@@ -48,6 +49,7 @@ Un simulador de carrera futbolística donde creas a tu propio jugador y guías s
 
 Un juego de puntería y reflejos pensado para jugar con ratón:
 
+- **Tecnología clave**: **FastAPI (Python)** para persistencia de récords en la nube.
 - **3 modos de juego**:
   - **Contrareloj**: consigue la puntuación más alta posible antes de que se terminen los 45 segundos.
   - **Supervivencia**: aguanta con un número limitado de vidas; si dejas escapar dianas válidas o disparas a una penalización, pierdes vidas.
@@ -61,6 +63,7 @@ Un juego de puntería y reflejos pensado para jugar con ratón:
 
 Un juego de gestión y carreras de coches con vista 3D en tiempo real:
 
+- **Tecnología clave**: **Three.js y WebGL** para la simulación 3D en tiempo real.
 - **Circuito en 3D**: un trazado interactivo donde ves a tu coche competir contra rivales en directo, adelantando y completando vueltas.
 - **Acelera con el ERS**: haz clic o pulsa en la pista para activar el turbo de tu coche, adelantar más rápido y ganar dinero extra al instante.
 - **Mejoras del coche y del equipo**:
